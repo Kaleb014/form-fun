@@ -7,6 +7,7 @@ import { v4 as uuidv4, version as uuidVersion, validate as uuidValidate } from '
 import { useAddStore } from './addClicked'
 import { useCopyStore } from './copyClicked'
 import { useGlobalFunctionStore } from './globalFunctions'
+import { useSortStore } from './sortStore'
 
 type Form = {
   isSelected: boolean
@@ -110,6 +111,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
     async toggleModalWait() {
       setTimeout(() => {
         this.editModalActive = !this.editModalActive
+        useFormStore().sortForms(false)
       }, 500)
     },
     saveClicked(_store: any) {

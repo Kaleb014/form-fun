@@ -223,8 +223,11 @@ export const useFormStore = defineStore('formGrid', {
           return
         case 1:
           console.log('copying Form')
-          const selection = useSelectionStore()
-          copy_form.content = this.forms[selection.selectionMap.get(0)].content
+          useEditFormStore().generateNewForm()
+          const copyFrom = this.forms[map.get(0)!]
+          const copyTo = useEditFormStore().form
+          copyTo.content = copyFrom.content
+          copyTo.tabs = copyFrom.tabs
           copy_form.toggleModal()
           break
         default:

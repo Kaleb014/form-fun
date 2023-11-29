@@ -40,9 +40,9 @@ function filteredFieldsRight(i: number) {
 }
 
 onMounted(() => {
-  edit.tabClicked(edit.currentTab, edit.currentTab)
-  edit.deselectAllFields()
-  console.log('tab length = ' + edit.form.tabs.length)
+  // edit.tabClicked(edit.currentTab, edit.currentTab)
+  // edit.deselectAllFields()
+  // console.log('tab length = ' + edit.form.tabs.length)
 })
 
 onUnmounted(() => {

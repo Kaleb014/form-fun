@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useFormStore } from './formsArray'
 
 export const useCopyStore = defineStore('copyButtonClicked', {
   state: () => {
@@ -26,6 +27,7 @@ export const useCopyStore = defineStore('copyButtonClicked', {
     async toggleModalWait() {
       setTimeout(() => {
         this.copyModalActive = !this.copyModalActive
+        useFormStore().sortForms(false)
       }, 1000)
     }
   }

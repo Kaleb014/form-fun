@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useEditFormStore } from './editForm'
+import { useFormStore } from './formsArray'
 
 export const useAddStore = defineStore('addButtonClicked', {
   state: () => {
@@ -12,12 +13,11 @@ export const useAddStore = defineStore('addButtonClicked', {
     async toggleModalWait() {
       setTimeout(() => {
         this.addModalActive = !this.addModalActive
-        console.log('add modal active = ' + this.addModalActive)
+        useFormStore().sortForms(false)
       }, 500)
     },
     toggleModal() {
       this.addModalActive = !this.addModalActive
-      console.log('add modal active = ' + this.addModalActive)
       if (this.addModalActive) {
         const form = useEditFormStore()
         form.generateNewForm()

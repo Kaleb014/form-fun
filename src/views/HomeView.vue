@@ -63,6 +63,7 @@ onMounted(() => {
   edit_clicked.editModalActive = false
   form_sort.loadSortGrid()
   forms_array.loadGrid()
+  forms_array.sortForms(false)
   selection_map.loadMap()
   forms_array.clearSelectionList(selection_map.selectionMap)
 })
