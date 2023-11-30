@@ -14,16 +14,19 @@ const delete_clicked = useDeleteStore()
           <button type="button" class="exit-button" @click="delete_clicked.toggleModal()">ⓧ</button>
         </div>
       </div>
-      <div class="scrollable">
-        <p>Are you sure you want to delete the selected item(s)?</p>
 
-        <div class="small-body-button">
-          <div class="modal_lower_button">
-            <button type="button" @click="delete_clicked.toggleModalWait()">Yes</button>
-            <button type="button" @click="delete_clicked.toggleModal()">No</button>
+      <div class="scrollable">
+        <span>Are you sure you want to delete the selected item(s)?</span>
+      </div>
+
+      <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="delete_clicked.toggleModalWait()">Yes</button>
+              <button type="button" @click="delete_clicked.toggleModal()">No</button>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </template>
