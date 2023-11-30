@@ -14,11 +14,7 @@ const edit = useEditFormStore()
           <div class="header-left">Delete Section(s)</div>
 
           <div class="header-right">
-            <button
-              type="button"
-              class="exit-button"
-              @click="field_type.toggleDeleteSectionModal()"
-            >
+            <button type="button" class="exit-button" @click="field_type.toggleDeleteSectionModal()">
               ⓧ
             </button>
           </div>
@@ -27,30 +23,24 @@ const edit = useEditFormStore()
         <div class="scrollable">
           <div class="sections-container">
             <span>Section(s)</span>
-            <div
-              class="section-button"
-              v-for="(section, index) in edit.form.tabs[edit.currentTab].sections"
-              :key="section"
-            >
-              <input
-                class="pointer"
-                type="checkbox"
-                name="field-section"
-                :value="index"
-              />&emsp;Section {{ index + 1 }}
+            <div class="section-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
+              <div class="switch-container">
+                <label class="switch">
+                  <input class="pointer" type="checkbox" name="field-section" :value="index" />
+                  <span class="slider"></span>
+                </label>
+                &emsp;Section {{ index + 1 }}
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="small-body-button">
-          <div class="modal_lower_button">
-            <button
-              type="button"
-              @click="edit.deleteSection(); field_type.toggleDeleteSectionModal()"
-            >
-              Save
-            </button>
-            <button type="button" @click="field_type.toggleDeleteSectionModal()">Cancel</button>
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.deleteSection(); field_type.toggleDeleteSectionModal()">Save</button>
+              <button type="button" @click="field_type.toggleDeleteSectionModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -60,12 +50,8 @@ const edit = useEditFormStore()
 
 <style scoped>
 .modal-inner {
-  height: auto;
-  width: auto;
-  min-width: 250px;
-  min-height: 250px;
-  max-width: 100vw;
-  max-height: 100vh;
+  max-width: 350px;
+  max-height: 750px;
 }
 
 .modal {
@@ -74,8 +60,9 @@ const edit = useEditFormStore()
 
 .section-button {
   padding: 2px;
-  display: flex;
-  vertical-align: middle;
+  position: relative;
+  left: 25px;
+  width: fit-content;
 }
 
 .sections-container {

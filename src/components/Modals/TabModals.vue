@@ -9,7 +9,7 @@ const edit = useEditFormStore()
 <template>
   <div v-if="field_type.addTabModalActive">
     <div class="modal">
-      <div class="modal-inner add">
+      <div class="modal-inner modal-width-override">
         <div class="header-row">
           <div class="header-left">New Tab</div>
 
@@ -22,23 +22,19 @@ const edit = useEditFormStore()
 
         <div class="scrollable">
           <div class="row">
-            <span>Tab Name</span>
-
             <div class="row-inner">
-              <input id="tab-name" type="text" />
+            <span>Tab Name : </span>
+              <input id="tab-name" type="text" placeholder=" Description..."/>
             </div>
           </div>
         </div>
 
-        <div class="small-body-button">
-          <div class="modal_lower_button">
-            <button
-              type="button"
-              @click="edit.addTab(); field_type.toggleAddTabModal()"
-            >
-              Save
-            </button>
-            <button type="button" @click="field_type.toggleAddTabModal()">Cancel</button>
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.addTab(); field_type.toggleAddTabModal()" > Save </button>
+              <button type="button" @click="field_type.toggleAddTabModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -47,7 +43,7 @@ const edit = useEditFormStore()
 
   <div v-if="field_type.editTabModalActive">
     <div class="modal">
-      <div class="modal-inner add">
+      <div class="modal-inner modal-width-override">
         <div class="header-row">
           <div class="header-left">Edit Tab: {{ edit.form.tabs[edit.currentTab].name }}</div>
 
@@ -60,18 +56,19 @@ const edit = useEditFormStore()
 
         <div class="scrollable">
           <div class="row">
-            <span>Tab Name</span>
-
             <div class="row-inner">
+              <span>Tab Name : </span>
               <input id="tab-name" type="text" :value="edit.form.tabs[edit.currentTab].name" />
             </div>
           </div>
         </div>
 
-        <div class="small-body-button">
-          <div class="modal_lower_button">
-            <button type="button" @click="edit.editTab()">Save</button>
-            <button type="button" @click="field_type.toggleEditTabModal()">Cancel</button>
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.editTab()">Save</button>
+              <button type="button" @click="field_type.toggleEditTabModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -80,7 +77,7 @@ const edit = useEditFormStore()
 
   <div v-if="field_type.deleteTabModalActive">
     <div class="modal">
-      <div class="modal-inner delete">
+      <div class="modal-inner modal-width-override">
         <div class="header-row">
           <div class="header-left">Delete Tab(s)</div>
 
@@ -95,17 +92,23 @@ const edit = useEditFormStore()
           <div class="tabs-container">
             <span>Tab(s)</span>
             <div class="tab-button" v-for="(tab, index) in edit.form.tabs" :key="index">
-              <input class="pointer" type="checkbox" name="tab" :value="index" />&emsp;{{
-                tab.name
-              }}
+              <div class="switch-container">
+                <label class="switch">
+                  <input class="pointer" type="checkbox" name="tab" :value="index" />
+                  <span class="slider"></span>
+                </label>
+                &emsp;{{ tab.name }}
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="small-body-button">
-          <div class="modal_lower_button">
-            <button type="button" @click="edit.deleteTab()">Save</button>
-            <button type="button" @click="field_type.toggleDeleteTabModal()">Cancel</button>
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.deleteTab()">Save</button>
+              <button type="button" @click="field_type.toggleDeleteTabModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -114,22 +117,12 @@ const edit = useEditFormStore()
 </template>
 
 <style scoped>
-.add {
-  height: auto;
-  width: auto;
-  min-width: 250px;
-  min-height: 100px;
-  max-width: 100vw;
-  max-height: 100vh;
+.modal-width-override {
+  max-width: 350px;
 }
 
-.delete {
-  height: auto;
-  width: auto;
-  min-width: 250px;
-  min-height: 250px;
-  max-width: 100vw;
-  max-height: 100vh;
+.row-inner {
+  text-align: center;
 }
 
 .modal {
@@ -146,8 +139,9 @@ const edit = useEditFormStore()
 
 .tab-button {
   padding: 2px;
-  display: flex;
-  vertical-align: middle;
+  position: relative;
+  left: 25px;
+  width: fit-content;
 }
 
 span {
@@ -156,8 +150,5 @@ span {
   color: #edf0f1;
 }
 
-.scrollable {
-  display: flex;
-}
+
 </style>
-../../stores/editForm

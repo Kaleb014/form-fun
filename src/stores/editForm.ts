@@ -196,9 +196,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         }
       }
       //Alignment
-      const _alignment = document.querySelector(
-        'input[name="field-alignment"]:checked'
-      ) as HTMLInputElement
+      const _alignment = document.querySelector('input[name="field-alignment"]:checked' ) as HTMLInputElement
       if (_alignment === null || _alignment === undefined) {
         const warning = useWarningStore()
         warning.toggleWarningModal()

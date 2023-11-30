@@ -25,7 +25,9 @@ console.log('warning modal active')
             </div>
           </div>
         </div>
-
+      </div>
+      
+      <div class="button-container">
         <div class="small-body-button">
           <div class="modal_lower_button">
             <button type="button" @click="warning.toggleWarningModal()">OK</button>

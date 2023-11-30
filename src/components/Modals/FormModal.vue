@@ -67,7 +67,7 @@ onUnmounted(() => {
           <div class="row">
             <span> Description </span>
             <div class="row-inner">
-              <input type="text" placeholder="Form Description..." v-model="edit.form.content" />
+              <input type="text" placeholder=" Form Description..." v-model="edit.form.content" />
             </div>
           </div>
         </div>
@@ -427,13 +427,15 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="button-container">
+      <div class="button-force-bottom">
+        <div class="button-container">
         <div name="save-cancel" class="modal_lower_button">
           <div class="small-body-button">
             <button type="submit" @click="edit.saveClicked(edit)">Save</button>
             <button type="button" @click="edit.toggleModal()">Cancel</button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -813,11 +815,13 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="button-container">
-        <div name="save-cancel" class="modal_lower_button">
-          <div class="small-body-button">
-            <button type="submit" @click="edit.saveClicked(add_clicked)">Save</button>
-            <button type="button" @click="add_clicked.toggleModal()">Cancel</button>
+      <div class="button-force-bottom">
+        <div class="button-container">
+          <div name="save-cancel" class="modal_lower_button">
+            <div class="small-body-button">
+              <button type="submit" @click="edit.saveClicked(add_clicked)">Save</button>
+              <button type="button" @click="add_clicked.toggleModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1199,11 +1203,13 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="button-container">
-        <div name="save-cancel" class="modal_lower_button">
-          <div class="small-body-button">
-            <button type="submit" @click="edit.saveClicked(copy_clicked)">Save</button>
-            <button type="button" @click="copy_clicked.toggleModal()">Cancel</button>
+      <div class="button-force-bottom">
+        <div class="button-container">
+          <div name="save-cancel" class="modal_lower_button">
+            <div class="small-body-button">
+              <button type="submit" @click="edit.saveClicked(copy_clicked)">Save</button>
+              <button type="button" @click="copy_clicked.toggleModal()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1216,6 +1222,12 @@ onUnmounted(() => {
 <style scoped>
 input[type='text'] {
   width: 100%;
+}
+
+.button-force-bottom {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
 
 .button_tools_hidden {
@@ -1290,6 +1302,7 @@ input[type='text'] {
   padding: 0;
   height: auto;
   overflow-x: auto;
+  margin-bottom: 35px;
 }
 
 .column {

@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue'
 import { useTabToolsStore } from '../../stores/tabToolsClicked'
-
+//TODO: Think I just want to scrap this component...
 const tabs_clicked = useTabToolsStore()
 
 onMounted(() => {

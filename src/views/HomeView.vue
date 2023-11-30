@@ -132,18 +132,13 @@ onUnmounted(() => {
               </tr>
               <tr v-for="(form, index) in form_sort.filteredForms" :key="index" class="hoverable">
                 <td id="Checkbox">
-                  <input
-                    name="checkboxes"
-                    v-model="form.isSelected"
-                    class="pointer"
-                    type="checkbox"
-                    @click="forms_array.selectForm(form, index)"
-                  />
+                  <label class="switch">
+                    <input  name="checkboxes" v-model="form.isSelected" class="pointer"  type="checkbox" @click="forms_array.selectForm(form, index)" />
+                    <span class="slider"></span>
+                  </label>
                 </td>
                 <td class="text-left">
-                  <a class="FormLink" @click="forms_array.editForm(form, index)">{{
-                    form.content
-                  }}</a>
+                  <a class="FormLink" @click="forms_array.editForm(form, index)">{{ form.content }}</a>
                 </td>
                 <td class="text-center">
                   <a>{{ form.dateCreated }}</a>
@@ -214,6 +209,7 @@ input {
 input:focus {
   outline: none;
 }
+
 .group-elements {
   display: flex;
 }
