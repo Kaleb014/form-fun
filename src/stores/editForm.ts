@@ -43,6 +43,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       newNumber: false,
       newItem: false,
       newFormula: false,
+      newLabel: false,
       getFieldProperties: true,
       alignment: '',
       section: 0,
@@ -175,6 +176,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       this.newText = false
       this.newItem = false
       this.newFormula = false
+      this.newLabel = false
     },
     setFieldProperties() {
       //Section
@@ -241,6 +243,10 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         return
       } else {
         switch (_type.value) {
+          case 'Label':
+            console.log(JSON.stringify(_type.value))
+            this.newLabel = true
+            break
           case 'Text':
             console.log(JSON.stringify(_type.value))
             this.newText = true
@@ -364,7 +370,19 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
     },
     saveNewField() {
       this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]
-      if (this.newText) {
+      if (this.newLabel) {
+        const _description = document.getElementById('description') as HTMLInputElement
+        const _text = document.getElementById('text') as HTMLInputElement
+        const _obj = {
+          alignment: this.alignment,
+          type: 'label',
+          description: _description.value,
+          value: _text.value,
+          isSelected: false,
+          isOn: true
+        }
+        this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+      } else if (this.newText) {
         const _description = document.getElementById('description') as HTMLInputElement
         const _text = document.getElementById('text') as HTMLInputElement
         const _obj = {

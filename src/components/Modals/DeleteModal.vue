@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useDeleteStore } from '../../stores/deleteClicked'
 
 const delete_clicked = useDeleteStore()

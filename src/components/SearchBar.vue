@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import { useSearchStore } from '../stores/searchStore'
 
 const search_store = useSearchStore()

@@ -34,7 +34,7 @@ onUnmounted(() => {
             <span>Section</span>
             <div class="field-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
               <label class="switch">
-                <input type="radio" name="field-section" :value="index"/>
+                <input type="radio" name="field-section" value="index"/>
                 <span class="slider"></span>
               </label>
               <span>&emsp;Section {{ index + 1 }}</span>
@@ -92,6 +92,13 @@ onUnmounted(() => {
             <span>Field Type</span>
             <div class="field-button">
               <label class="switch">
+                <input type="radio" name="field-type" value="Label" />
+                <span class="slider"></span>
+              </label>
+              <span>&emsp;Label</span>
+            </div>
+            <div class="field-button">
+              <label class="switch">
                 <input type="radio" name="field-type" value="Text" />
                 <span class="slider"></span>
               </label>
@@ -126,6 +133,38 @@ onUnmounted(() => {
             <div class="modal_lower_button">
               <button type="button" @click="edit.setFieldProperties()">Next</button>
               <button type="button" @click="field_type.toggleAddModal()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" v-if="edit.newLabel">
+      <div class="modal-inner type-modal-inner">
+        <div class="header-row">
+          <div class="header-left">New Field: Label</div>
+
+          <div class="header-right">
+            <button type="button" class="exit-button" @click="field_type.toggleAddModal(); edit.closeInputModals()">
+              ⓧ
+            </button>
+          </div>
+        </div>
+
+        <div class="scrollable">
+          <div class="row">
+            <div class="row-inner-override">
+              <input id="description" type="text" placeholder=" Description..." />
+              <input id="text" type="text" placeholder=" Value..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
         </div>
@@ -278,7 +317,7 @@ onUnmounted(() => {
             <span>Section</span>
             <div class="field-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
               <label class="switch">
-                <input type="radio" name="field-section" v-model="currentField.section" />
+                <input type="radio" name="field-section" value="index" />
                 <span class="slider"></span>
               </label>
               <span>&emsp;Section {{ index + 1 }}</span>
@@ -334,6 +373,13 @@ onUnmounted(() => {
 
           <div class="field-type-buttons-container">
             <span>Field Type</span>
+            <div class="field-button">
+              <label class="switch">
+                <input type="radio" name="field-type" value="Label" />
+                <span class="slider"></span>
+              </label>
+              <span>&emsp;Label</span>
+            </div>
             <div class="field-button">
               <label class="switch">
                 <input type="radio" name="field-type" value="Text" />
