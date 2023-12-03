@@ -4,6 +4,7 @@ import { useEditFormStore } from '../../stores/editForm'
 
 const field_type = useFieldTypeStore()
 const edit = useEditFormStore()
+
 </script>
 
 <template>

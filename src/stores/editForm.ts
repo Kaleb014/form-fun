@@ -45,6 +45,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       newFormula: false,
       newLabel: false,
       getFieldProperties: true,
+      indentedChecked: false,
       alignment: '',
       section: 0,
       currentTab: 0,
@@ -62,7 +63,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           {
             name: '',
             isSelected: false,
-            sections: [{ fields: [] }]
+            sections: [{ columns: [{ fields: [] }] }]
           }
         ]
       } as Form
@@ -89,7 +90,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         {
           name: 'Default',
           isSelected: false,
-          sections: [{ fields: [] }]
+          sections: [{ columns: [{ fields: [] }] }]
         }
       ]
     },
@@ -205,33 +206,36 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         warning.message = 'Select an alignment and try again.'
         warning.header = 'Alignment is a required field.'
         return
+      } else if (!_alignment) {
+        return
       } else {
-        switch (_alignment.value) {
-          case 'Left':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'left'
-            break
-          case 'Left-tabbed':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'left-tabbed'
-            break
-          case 'Center':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'center'
-            break
-          case 'Center-tabbed':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'center-tabbed'
-            break
-          case 'Right':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'right'
-            break
-          case 'Right-tabbed':
-            console.log(JSON.stringify(_alignment.value))
-            this.alignment = 'right-tabbed'
-            break
-        }
+        this.alignment = 'tabbed'
+        // switch (_alignment.value) {
+        //   case 'Left':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'left'
+        //     break
+        //   case 'Left-tabbed':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'left-tabbed'
+        //     break
+        //   case 'Center':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'center'
+        //     break
+        //   case 'Center-tabbed':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'center-tabbed'
+        //     break
+        //   case 'Right':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'right'
+        //     break
+        //   case 'Right-tabbed':
+        //     console.log(JSON.stringify(_alignment.value))
+        //     this.alignment = 'right-tabbed'
+        //     break
+        // }
       }
       //Type
       const _type = document.querySelector('input[name="field-type"]:checked') as HTMLInputElement
@@ -349,8 +353,8 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         }
       }
     },
-    addSection(_index: number) {
-      this.form.tabs[_index].sections.push({ fields: [] })
+    addSection() {
+      this.form.tabs[this.currentTab].sections.push({ columns: [] })
     },
     deleteSection() {
       const _deleteChecked = document.getElementsByName(
@@ -367,6 +371,13 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         }
         this.form.tabs[this.currentTab].sections = _array
       }
+    },
+    // TODO: Finish addColumn and deleteColumn functions
+    addColumn() {
+      this.form.tabs[this.currentTab].sections[this.currentSection].columns.push({ fields: [] })
+    },
+    deleteColumn() {
+
     },
     saveNewField() {
       this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]

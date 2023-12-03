@@ -8,7 +8,9 @@ export const useFieldTypeStore = defineStore('fieldTypeStore', {
       addTabModalActive: false,
       editTabModalActive: false,
       deleteTabModalActive: false,
-      deleteSectionModalActive: false
+      deleteSectionModalActive: false,
+      addColumnModalActive: false,
+      deleteColumnModalActive: false
     }
   },
   actions: {
@@ -29,6 +31,12 @@ export const useFieldTypeStore = defineStore('fieldTypeStore', {
     },
     toggleDeleteSectionModal() {
       this.deleteSectionModalActive = !this.deleteSectionModalActive
-    }
+    },
+    toggleAddColumnModal(){
+      this.addColumnModalActive = !this.addColumnModalActive
+    },
+    toggleDeleteColumnModal(){
+      this.deleteColumnModalActive = !this.deleteColumnModalActive
+    },
   }
 })

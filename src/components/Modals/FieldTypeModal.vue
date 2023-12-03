@@ -34,11 +34,21 @@ onUnmounted(() => {
             <span>Section</span>
             <div class="field-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
               <label class="switch">
-                <input type="radio" name="field-section" value="index"/>
+                <input type="radio" name="field-section" :value="index"/>
                 <span class="slider"></span>
               </label>
               <span>&emsp;Section {{ index + 1 }}</span>
-              <!--<input class="pointer" type="radio" name="field-section" :value="index"/>&emsp;Section {{ index+1 }}-->
+            </div>
+          </div>
+          <!-- TODO: Must create a Section select Modal, then generate this modal after submit -->
+          <div class="field-type-buttons-container">
+            <span>Column</span>
+            <div class="field-button" v-for="(column, index) in edit.form.tabs[edit.currentTab].sections" :key="column">
+              <label class="switch">
+                <input type="radio" name="field-section" :value="index"/>
+                <span class="slider"></span>
+              </label>
+              <span>&emsp;Column {{ index + 1 }}</span>
             </div>
           </div>
           <!-- TODO: Create a data structure that stores the below values, then create elements by looping, like I did with Sections -->
@@ -46,45 +56,10 @@ onUnmounted(() => {
             <span>Alignment</span>
             <div class="field-button">
               <label class="switch">
-                <input type="radio" name="field-alignment" value="Left" />
+                <input type="checkbox" name="field-alignment" :value="true" />
                 <span class="slider"></span>
               </label>
-              <span>&emsp;Left</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Left-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Left-tabbed</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Center" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Center</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Center-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Center-tabbed</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Right" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Right</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Right-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Right-tabbed</span>
+              <span>&emsp;Indent</span>
             </div>
           </div>
 
