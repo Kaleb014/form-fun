@@ -6,7 +6,7 @@ import { useCopyStore } from '../../stores/copyClicked'
 import { useEditFormStore } from '../../stores/editForm'
 import { useToolTipsStore } from '../../stores/toolTipsStore'
 import { useFieldTypeStore } from '../../stores/FieldTypeStore'
-import { onMounted, onUnmounted } from 'vue'
+import { onUnmounted } from 'vue'
 import { useGlobalFunctionStore } from '../../stores/globalFunctions'
 import _ellipses from '../../assets/3-vertical-dots-icon-export.png'
 import _ellipsesHover from '../../assets/ellipses-hover-export.png'
@@ -21,29 +21,6 @@ const global = useGlobalFunctionStore()
 
 const _ellipsesImg = _ellipses
 const _ellipsesImgHover = _ellipsesHover
-
-//TODO: Move to Sort Store
-function filteredFieldsLeft(i: number) {
-  return edit.form.tabs[edit.currentTab].sections[i].fields.filter((a: any) => {
-    return a.alignment.indexOf('left') > -1 || a.alignment.indexOf('left-tabbed') > -1
-  })
-}
-function filteredFieldsCenter(i: number) {
-  return edit.form.tabs[edit.currentTab].sections[i].fields.filter((a: any) => {
-    return a.alignment.indexOf('center') > -1 || a.alignment.indexOf('center-tabbed') > -1
-  })
-}
-function filteredFieldsRight(i: number) {
-  return edit.form.tabs[edit.currentTab].sections[i].fields.filter((a: any) => {
-    return a.alignment.indexOf('right') > -1 || a.alignment.indexOf('right-tabbed') > -1
-  })
-}
-
-onMounted(() => {
-  // edit.tabClicked(edit.currentTab, edit.currentTab)
-  // edit.deselectAllFields()
-  // console.log('tab length = ' + edit.form.tabs.length)
-})
 
 onUnmounted(() => {
   edit.resetState()
@@ -178,8 +155,7 @@ onUnmounted(() => {
             <button
               class="ellipses-command-button tooltip"
               type="button"
-              @click="edit.showSectionTools = !edit.showSectionTools"
-            >
+              @click="edit.showSectionTools = !edit.showSectionTools">
               <img
                 :src="edit.mouseOverSectionTools ? _ellipsesImgHover : _ellipsesImg"
                 width="5"
@@ -188,9 +164,9 @@ onUnmounted(() => {
                 @mouseleave="edit.mouseOverSectionTools = false"
               />
               <div class="tooltip-container">
-                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips"
-                  >Section Tools</span
-                >
+                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips">
+                  Section Tools
+                </span>
               </div>
             </button>
 
@@ -199,38 +175,35 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="edit.addSection()"
-                >
+                  @click="edit.addSection()">
                   <img src="../../assets/add-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips"
-                      >Add Section</span
-                    >
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Section
+                    </span>
                   </div>
                 </button>
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleDeleteSectionModal()"
-                >
+                  @click="field_type.toggleDeleteSectionModal()">
                   <img src="../../assets/delete-icon-export.png" width="18" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips"
-                      >Delete Section</span
-                    >
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Section
+                    </span>
                   </div>
                 </button>
-                <!-- TODO: Finish adding buttons for columns -->
+
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="edit.addColumn()"
-                >
+                  @click="field_type.toggleAddColumnModal()">
                   <img src="../../assets/add-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips"
-                      >Add Column</span
-                    >
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Column
+                    </span>
                   </div>
                 </button>
               </div>
@@ -303,266 +276,70 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="section">
-          <div v-for="column in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="column">
-            <div name="left-fields" class="field-row" v-for="(field, index) in filteredFieldsLeft(sectionIndex)" :key="index">
+        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+            <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
-                <div v-if="field.type === 'label'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.value }}
-                    </span>
-                  </div>
+              <div v-if="field.type === 'label'" :class="field.alignment">
+                <div class="field-row-inner">
+                  <label class="switch">
+                    <input type="checkbox" v-model="field.isOn" />
+                    <span class="slider"></span>
+                  </label>
+                  <span
+                    name="selectable-field"
+                    class="field-value selectable"
+                    @click="edit.selectField(field)"
+                    :class="{ 'is-selected-outline': field.isSelected }"
+                  >
+                    {{ field.value }}
+                  </span>
                 </div>
-
-                <div v-if="field.type === 'text'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <textarea class="field-value">{{ field.value }}</textarea>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'number'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-description selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}:
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <input type="text" class="field-value" v-model="field.value" />
-                  </div>
-                  
-                </div>
-
               </div>
+
+              <div v-if="field.type === 'text'" :class="field.alignment">
+                <div class="field-row-inner">
+                  <label class="switch">
+                    <input type="checkbox" v-model="field.isOn" />
+                    <span class="slider"></span>
+                  </label>
+                  <span
+                    name="selectable-field"
+                    class="field-value selectable"
+                    @click="edit.selectField(field)"
+                    :class="{ 'is-selected-outline': field.isSelected }"
+                  >
+                    {{ field.description }}
+                  </span>
+                </div>
+                <div class="field-value-row">
+                  <textarea class="field-value">{{ field.value }}</textarea>
+                </div>
+              </div>
+
+              <div v-if="field.type === 'number'" :class="field.alignment">
+                <div class="field-row-inner">
+                  <label class="switch">
+                    <input type="checkbox" v-model="field.isOn" />
+                    <span class="slider"></span>
+                  </label>
+                  <span
+                    name="selectable-field"
+                    class="field-description selectable"
+                    @click="edit.selectField(field)"
+                    :class="{ 'is-selected-outline': field.isSelected }"
+                  >
+                    {{ field.description }}:
+                  </span>
+                </div>
+                <div class="field-value-row">
+                  <input type="text" class="field-value" v-model="field.value" />
+                </div>
+                
+              </div>
+
+            </div>
           </div>
-
-
-          <!--<div class="left-right-center" id="info" v-if="edit.infoSelected">
-
-            <div class="column">
-              <div name="left-fields" class="field-row" v-for="(field, index) in filteredFieldsLeft(sectionIndex)" :key="index">
-                
-                <div v-if="field.type === 'label'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.value }}
-                    </span>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'text'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <textarea class="field-value">{{ field.value }}</textarea>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'number'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-description selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}:
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <input type="text" class="field-value" v-model="field.value" />
-                  </div>
-                  
-                </div>
-
-              </div>
-            </div>
-
-            <div class="column">
-              <div name="center-fields" class="field-row" v-for="(field, index) in filteredFieldsCenter(sectionIndex)" :key="index">
-                
-                <div v-if="field.type === 'label'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.value }}
-                    </span>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'text'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <textarea class="field-value">{{ field.value }}</textarea>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'number'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-description selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}:
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <input type="text" class="field-value" v-model="field.value" />
-                  </div>
-                  
-                </div>
-
-              </div>
-            </div>
-
-            <div class="column">
-              <div name="right-fields" class="field-row" v-for="(field, index) in filteredFieldsRight(sectionIndex)" :key="index">
-                
-                <div v-if="field.type === 'label'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.value }}
-                    </span>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'text'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-value selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <textarea class="field-value">{{ field.value }}</textarea>
-                  </div>
-                </div>
-
-                <div v-if="field.type === 'number'" :class="field.alignment">
-                  <div class="field-row-inner">
-                    <label class="switch">
-                      <input type="checkbox" v-model="field.isOn" />
-                      <span class="slider"></span>
-                    </label>
-                    <span
-                      name="selectable-field"
-                      class="field-description selectable"
-                      @click="edit.selectField(field)"
-                      :class="{ 'is-selected-outline': field.isSelected }"
-                    >
-                      {{ field.description }}:
-                    </span>
-                  </div>
-                  <div class="field-value-row">
-                    <input type="text" class="field-value" v-model="field.value" />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-          </div>-->
         </div>
       </div>
 
@@ -705,8 +482,7 @@ onUnmounted(() => {
             <button
               class="ellipses-command-button tooltip"
               type="button"
-              @click="edit.showSectionTools = !edit.showSectionTools"
-            >
+              @click="edit.showSectionTools = !edit.showSectionTools">
               <img
                 :src="edit.mouseOverSectionTools ? _ellipsesImgHover : _ellipsesImg"
                 width="5"
@@ -715,9 +491,9 @@ onUnmounted(() => {
                 @mouseleave="edit.mouseOverSectionTools = false"
               />
               <div class="tooltip-container">
-                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips"
-                  >Section Tools</span
-                >
+                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips">
+                  Section Tools
+                </span>
               </div>
             </button>
 
@@ -726,25 +502,35 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="edit.addSection()"
-                >
+                  @click="edit.addSection()">
                   <img src="../../assets/add-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips"
-                      >Add Section</span
-                    >
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Section
+                    </span>
                   </div>
                 </button>
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleDeleteSectionModal()"
-                >
+                  @click="field_type.toggleDeleteSectionModal()">
                   <img src="../../assets/delete-icon-export.png" width="18" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips"
-                      >Delete Section</span
-                    >
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Section
+                    </span>
+                  </div>
+                </button>
+
+                <button
+                  class="command-button tooltip"
+                  type="button"
+                  @click="field_type.toggleAddColumnModal()">
+                  <img src="../../assets/add-icon-export.png" width="22" height="22" />
+                  <div class="tooltip-container">
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Column
+                    </span>
                   </div>
                 </button>
               </div>
@@ -817,21 +603,12 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div
-          name="fields"
-          class="section"
-          v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections"
-          :key="section"
-        >
-          <div class="left-right-center" id="info" v-if="edit.infoSelected">
-            <div class="column">
-              <div
-                name="left-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsLeft(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
+        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
+            <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
+                
+              <div v-if="field.type === 'label'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -845,35 +622,10 @@ onUnmounted(() => {
                     {{ field.value }}
                   </span>
                 </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-description selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.description }}:
-                  </span>
-                  <input type="text" class="field-value" v-model="field.value" />
-                </div>
               </div>
-            </div>
-            <div class="column">
-              <div
-                name="center-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsCenter(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
+
+              <div v-if="field.type === 'text'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -884,14 +636,16 @@ onUnmounted(() => {
                     @click="edit.selectField(field)"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
-                    {{ field.value }}
+                    {{ field.description }}
                   </span>
                 </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
+                <div class="field-value-row">
+                  <textarea class="field-value">{{ field.value }}</textarea>
+                </div>
+              </div>
+
+              <div v-if="field.type === 'number'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -904,51 +658,13 @@ onUnmounted(() => {
                   >
                     {{ field.description }}:
                   </span>
+                </div>
+                <div class="field-value-row">
                   <input type="text" class="field-value" v-model="field.value" />
                 </div>
+                
               </div>
-            </div>
-            <div class="column">
-              <div
-                name="right-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsRight(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-value selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.value }}
-                  </span>
-                </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-description selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.description }}:
-                  </span>
-                  <input type="text" class="field-value" v-model="field.value" />
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -1093,8 +809,7 @@ onUnmounted(() => {
             <button
               class="ellipses-command-button tooltip"
               type="button"
-              @click="edit.showSectionTools = !edit.showSectionTools"
-            >
+              @click="edit.showSectionTools = !edit.showSectionTools">
               <img
                 :src="edit.mouseOverSectionTools ? _ellipsesImgHover : _ellipsesImg"
                 width="5"
@@ -1103,9 +818,9 @@ onUnmounted(() => {
                 @mouseleave="edit.mouseOverSectionTools = false"
               />
               <div class="tooltip-container">
-                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips"
-                  >Section Tools</span
-                >
+                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips">
+                  Section Tools
+                </span>
               </div>
             </button>
 
@@ -1114,25 +829,35 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="edit.addSection()"
-                >
+                  @click="edit.addSection()">
                   <img src="../../assets/add-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips"
-                      >Add Section</span
-                    >
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Section
+                    </span>
                   </div>
                 </button>
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleDeleteSectionModal()"
-                >
+                  @click="field_type.toggleDeleteSectionModal()">
                   <img src="../../assets/delete-icon-export.png" width="18" height="22" />
                   <div class="tooltip-container">
-                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips"
-                      >Delete Section</span
-                    >
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Section
+                    </span>
+                  </div>
+                </button>
+
+                <button
+                  class="command-button tooltip"
+                  type="button"
+                  @click="field_type.toggleAddColumnModal()">
+                  <img src="../../assets/add-icon-export.png" width="22" height="22" />
+                  <div class="tooltip-container">
+                    <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
+                      Add Column
+                    </span>
                   </div>
                 </button>
               </div>
@@ -1205,21 +930,12 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div
-          name="fields"
-          class="section"
-          v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections"
-          :key="section"
-        >
-          <div class="left-right-center" id="info" v-if="edit.infoSelected">
-            <div class="column">
-              <div
-                name="left-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsLeft(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
+        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+            <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
+                
+              <div v-if="field.type === 'label'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -1233,35 +949,10 @@ onUnmounted(() => {
                     {{ field.value }}
                   </span>
                 </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-description selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.description }}:
-                  </span>
-                  <input type="text" class="field-value" v-model="field.value" />
-                </div>
               </div>
-            </div>
-            <div class="column">
-              <div
-                name="center-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsCenter(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
+
+              <div v-if="field.type === 'text'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -1272,14 +963,16 @@ onUnmounted(() => {
                     @click="edit.selectField(field)"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
-                    {{ field.value }}
+                    {{ field.description }}
                   </span>
                 </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
+                <div class="field-value-row">
+                  <textarea class="field-value">{{ field.value }}</textarea>
+                </div>
+              </div>
+
+              <div v-if="field.type === 'number'" :class="field.alignment">
+                <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
                     <span class="slider"></span>
@@ -1292,51 +985,13 @@ onUnmounted(() => {
                   >
                     {{ field.description }}:
                   </span>
+                </div>
+                <div class="field-value-row">
                   <input type="text" class="field-value" v-model="field.value" />
                 </div>
+                
               </div>
-            </div>
-            <div class="column">
-              <div
-                name="right-fields"
-                class="field-row"
-                v-for="(field, index) in filteredFieldsRight(sectionIndex)"
-                :key="index"
-              >
-                <div v-if="field.type === 'text'" class="field-row-inner" :class="field.alignment">
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-value selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.value }}
-                  </span>
-                </div>
-                <div
-                  v-if="field.type === 'number'"
-                  class="field-row-inner"
-                  :class="field.alignment"
-                >
-                  <label class="switch">
-                    <input type="checkbox" v-model="field.isOn" />
-                    <span class="slider"></span>
-                  </label>
-                  <span
-                    name="selectable-field"
-                    class="field-description selectable"
-                    @click="edit.selectField(field)"
-                    :class="{ 'is-selected-outline': field.isSelected }"
-                  >
-                    {{ field.description }}:
-                  </span>
-                  <input type="text" class="field-value" v-model="field.value" />
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -1434,11 +1089,10 @@ input[type="text"] {
   right: -4px;
 }
 
-.tools {
-  border-bottom: 1px solid #4a4c55;
-}
 
 .section {
+  display: flex;
+  height: 100%;
   width: 100%;
   border-top: 1px solid #4a4c55;
 }
@@ -1449,13 +1103,20 @@ input[type="text"] {
 
 .scrollable {
   padding: 0;
-  height: auto;
   overflow: auto;
+  position: relative;
   margin-bottom: 35px;
+  height: calc(100% - 35px);
+  justify-content: space-evenly;
 }
 
 .column {
   width: 100%;
+  border-left: 1px solid #4a4c55;
+}
+
+.column:nth-child(1) {
+  border-left: none;
 }
 
 .left-right-center {
@@ -1537,6 +1198,9 @@ textarea {
   height: 150px;
 }
 
+.tools {
+  border-bottom: 1px solid #4a4c55;
+}
 .permanent-row {
   width: 100%;
   min-height: 35px;

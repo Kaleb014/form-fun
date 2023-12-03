@@ -106,7 +106,9 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       return uuidValidate(guid) && uuidVersion(guid) === 4
     },
 
-    toggleCopyModal() {},
+    toggleCopyModal() {
+      
+    },
     toggleWarningModal() {
       this.editWarningModalActive = !this.editWarningModalActive
     },
@@ -153,21 +155,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
 
       _store.toggleModalWait()
     },
-    infoClicked() {
-      this.formulasSelected = false
-      this.itemsSelected = false
-      this.infoSelected = true
-    },
-    formulasClicked() {
-      this.itemsSelected = false
-      this.infoSelected = false
-      this.formulasSelected = true
-    },
-    itemsClicked() {
-      this.formulasSelected = false
-      this.infoSelected = false
-      this.itemsSelected = true
-    },
     tabClicked(_oldIndex: number, _newIndex: number) {
       this.form.tabs[_oldIndex].isSelected = false
       this.form.tabs[_newIndex].isSelected = true
@@ -210,32 +197,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         return
       } else {
         this.alignment = 'tabbed'
-        // switch (_alignment.value) {
-        //   case 'Left':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'left'
-        //     break
-        //   case 'Left-tabbed':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'left-tabbed'
-        //     break
-        //   case 'Center':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'center'
-        //     break
-        //   case 'Center-tabbed':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'center-tabbed'
-        //     break
-        //   case 'Right':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'right'
-        //     break
-        //   case 'Right-tabbed':
-        //     console.log(JSON.stringify(_alignment.value))
-        //     this.alignment = 'right-tabbed'
-        //     break
-        // }
       }
       //Type
       const _type = document.querySelector('input[name="field-type"]:checked') as HTMLInputElement
@@ -312,7 +273,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       this.form.tabs.push({
         name: _name.value,
         isSelected: false,
-        sections: [{ fields: [] }]
+        sections: [{ columns: [{ fields: [] }] }]
       })
     },
     editTab() {
@@ -354,12 +315,10 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       }
     },
     addSection() {
-      this.form.tabs[this.currentTab].sections.push({ columns: [] })
+      this.form.tabs[this.currentTab].sections.push({ columns: [{ fields: [] }] })
     },
     deleteSection() {
-      const _deleteChecked = document.getElementsByName(
-        'field-section'
-      ) as NodeListOf<HTMLInputElement>
+      const _deleteChecked = document.getElementsByName('field-section') as NodeListOf<HTMLInputElement>
       if (_deleteChecked.length > 0) {
         let _array = [] as Array<any>
         for (let i = 0; i < _deleteChecked.length; ++i) {
@@ -372,9 +331,36 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         this.form.tabs[this.currentTab].sections = _array
       }
     },
-    // TODO: Finish addColumn and deleteColumn functions
-    addColumn() {
-      this.form.tabs[this.currentTab].sections[this.currentSection].columns.push({ fields: [] })
+    // TODO: Finish deleteColumn function
+    getSelectedSection() {
+      const _section = document.getElementsByName('section-choice') as NodeListOf<HTMLInputElement>
+      const warning = useWarningStore()
+      let _array = [] as Array<number>
+      
+      for (let i = 0; i < _section.length; i++) {
+        if(_section[i].checked) {
+          _array.push(i)
+        }
+      }
+
+      switch(_array.length) {
+        case 0:
+          warning.toggleWarningModal()
+          warning.message = 'Select a section and try again.'
+          warning.header = 'Cannot create a column without knowing which section to add it to.'           
+          break
+        case 1:
+          this.addColumn(_array[0])
+          break
+        default:
+          warning.toggleWarningModal()
+          warning.message = 'Select only one section and try again.'
+          warning.header = 'Cannot create a column in more than one section at a time.'
+      }
+    },
+    addColumn(_section: number) {
+      this.form.tabs[this.currentTab].sections[_section].columns.push({ fields: [] })
+      useFieldTypeStore().toggleAddColumnModal()
     },
     deleteColumn() {
 

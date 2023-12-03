@@ -26,7 +26,7 @@ const edit = useEditFormStore()
             <div class="section-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
               <div class="switch-container">
                 <label class="switch">
-                  <input class="pointer" type="checkbox" name="field-section" :value="index" />
+                  <input class="pointer" type="checkbox" name="section-choice" :value="index" />
                   <span class="slider"></span>
                 </label>
                 &emsp;Column {{ index + 1 }}
@@ -66,7 +66,7 @@ const edit = useEditFormStore()
             <div class="section-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
               <div class="switch-container">
                 <label class="switch">
-                  <input class="pointer" type="checkbox" name="field-section" :value="index" />
+                  <input class="pointer" type="checkbox" name="section-choice" :value="index" />
                   <span class="slider"></span>
                 </label>
                 &emsp;Section {{ index + 1 }}
@@ -78,7 +78,7 @@ const edit = useEditFormStore()
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.addColumn(); field_type.toggleAddColumnModal()">Save</button>
+              <button type="button" @click="edit.getSelectedSection()">Save</button>
               <button type="button" @click="field_type.toggleAddColumnModal()">Cancel</button>
             </div>
           </div>

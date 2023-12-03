@@ -15,6 +15,7 @@ import AddTabModal from '../components/Modals/TabModals.vue'
 import TabToolsDropdownModal from '../components/Modals/TabToolsDropdownModal.vue'
 import { useTabToolsStore } from '../stores/tabToolsClicked'
 import FormModalVue from '@/components/Modals/FormModal.vue'
+import ColumnsModals from '@/components/Modals/ColumnsModals.vue'
 
 const add_clicked = useAddStore()
 const delete_clicked = useDeleteStore()
@@ -52,6 +53,8 @@ const field_type = useFieldTypeStore()
   />
 
   <DeleteSectionModal v-if="field_type.deleteSectionModalActive" />
+
+  <ColumnsModals v-if="field_type.addColumnModalActive || field_type.deleteColumnModalActive" />
 
   <WarningModal v-if="warning.warningModalActive" />
 
