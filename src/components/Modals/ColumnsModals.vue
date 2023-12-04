@@ -21,15 +21,15 @@ const edit = useEditFormStore()
         </div>
 
         <div class="scrollable">
-          <div class="sections-container">
-            <span>Column(s)</span>
-            <div class="section-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
+          <div class="sections-container" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+            &emsp;Section {{ sectionIndex + 1 }}
+            <div class="section-button" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
               <div class="switch-container">
                 <label class="switch">
-                  <input class="pointer" type="checkbox" name="section-choice" :value="index" />
+                  <input class="pointer" type="checkbox" name="delete-column" />
                   <span class="slider"></span>
                 </label>
-                &emsp;Column {{ index + 1 }}
+                &emsp;Column {{ columnIndex + 1 }}
               </div>
             </div>
           </div>
@@ -112,9 +112,4 @@ const edit = useEditFormStore()
   white-space: nowrap;
   padding: 5px;
 }
-
-.scrollable {
-  display: flex;
-}
 </style>
-../../stores/editForm

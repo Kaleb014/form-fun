@@ -36,8 +36,8 @@ export const useFieldTypeStore = defineStore('fieldTypeStore', {
       this.addColumnModalActive = !this.addColumnModalActive
       console.log(this.addColumnModalActive)
     },
-    toggleDeleteColumnModal(){
+    toggleDeleteColumnModal() {
       this.deleteColumnModalActive = !this.deleteColumnModalActive
-    },
+    }
   }
 })

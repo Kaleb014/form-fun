@@ -8,6 +8,7 @@ import { useAddStore } from './addClicked'
 import { useCopyStore } from './copyClicked'
 import { useGlobalFunctionStore } from './globalFunctions'
 import { useSortStore } from './sortStore'
+import { ref } from 'vue'
 
 type Form = {
   isSelected: boolean
@@ -18,6 +19,8 @@ type Form = {
   id: string
   tabs: Array<any>
 }
+
+
 
 export const useEditFormStore = defineStore('editFormButtonClicked', {
   state: () => {
@@ -50,8 +53,10 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       section: 0,
       currentTab: 0,
       currentSection: 0,
+      currentColumn: 0,
       currentField: 0,
-      selectionArray: [],
+      selectionArray: [] as Array<any>,
+      editArray: [] as Array<any>,
       form: {
         isSelected: false,
         content: '',
@@ -240,31 +245,37 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         _field.isSelected = true
       }
     },
-    getSelectedFields(_section: number) {
+    getSelectedFields() {
       const _array = [] as Array<any>
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections[_section].fields.length; ++i) {
-        if (this.form.tabs[this.currentTab].sections[_section].fields[i].isSelected) {
-          _array.push(i)
+      for(let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+        for(let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+          for (let k = 0; k < this.form.tabs[this.currentTab].sections[i].columns[j].fields.length; k++) {
+            if (this.form.tabs[this.currentTab].sections[i].columns[j].fields[k].isSelected) {
+              _array.push({
+                sections: i,
+                columns: j,
+                fields: k
+              })
+            }
+          }
         }
       }
       return _array
     },
-    getUnselectedFields(_section: number) {
+    getUnselectedFields(_section: number, _column: number) {
       const _array = [] as Array<any>
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections[_section].fields.length; ++i) {
-        if (!this.form.tabs[this.currentTab].sections[_section].fields[i].isSelected) {
+      for (let i = 0; i < this.form.tabs[this.currentTab].sections[_section].columns[_column].fields.length; ++i) {
+        if (!this.form.tabs[this.currentTab].sections[_section].columns[_column].fields[i].isSelected) {
           _array.push(i)
         }
       }
       return _array
     },
     deselectAllFields() {
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-        const _array = this.getSelectedFields(i)
-        if (_array.length > 0) {
-          for (let yy = 0; yy < _array.length; ++yy) {
-            this.form.tabs[this.currentTab].sections[i].fields[_array[yy]].isSelected = false
-          }
+      const _array = this.getSelectedFields()
+      if (_array.length > 0) {
+        for (let yy = 0; yy < _array.length; yy++) {
+          this.form.tabs[this.currentTab].sections[_array[yy].sections].columns[_array[yy].columns].fields[_array[yy].fields].isSelected = false
         }
       }
     },
@@ -331,7 +342,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         this.form.tabs[this.currentTab].sections = _array
       }
     },
-    // TODO: Finish deleteColumn function
     getSelectedSection() {
       const _section = document.getElementsByName('section-choice') as NodeListOf<HTMLInputElement>
       const warning = useWarningStore()
@@ -363,7 +373,19 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       useFieldTypeStore().toggleAddColumnModal()
     },
     deleteColumn() {
-
+      const _deleteChecked = document.getElementsByName('delete-column') as NodeListOf<HTMLInputElement>
+      if (_deleteChecked.length > 0) {
+        let _index = 0;
+        for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+          for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+            if (_deleteChecked[_index].checked) {
+              this.form.tabs[this.currentTab].sections[i].columns.splice(j,1)
+              j--
+            }
+            _index++
+          }
+        }
+      }
     },
     saveNewField() {
       this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]
@@ -405,163 +427,179 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
       }
     },
-    async saveEditedField() {
-      const _currentField =
-        this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]
-      if (this.currentSection != this.section) {
-        if (this.newText) {
-          const _description = document.getElementById('description') as HTMLInputElement
-          const _text = document.getElementById('text') as HTMLInputElement
-          const _obj = {
-            alignment: this.alignment,
-            type: 'text',
-            description: _description.value,
-            value: _text.value,
-            isSelected: false,
-            isOn: _currentField.isOn
-          }
-          this.form.tabs[this.currentTab].sections[this.currentSection].fields.splice(
-            this.currentField,
-            1
-          )
-          this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
-          let sectionsChecked = 0
-          for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-            const _array = this.getSelectedFields(i)
-            if (_array.length > 0) {
-              const field_type = useFieldTypeStore()
-              field_type.toggleEditModal()
-              setTimeout(() => {
-                this.editField()
-              }, 500)
-              console.log('array length after save ' + _array.length)
-            } else {
-              sectionsChecked++
-              if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
-                const field_type = useFieldTypeStore()
-                setTimeout(() => {
-                  field_type.toggleEditModal()
-                  this.closeInputModals()
-                }, 500)
+    saveEditedField() {
+      const field_type = useFieldTypeStore()
 
-                console.log('no more fields to edit')
-              }
-            }
-          }
-        } else if (this.newNumber) {
-          const _description = document.getElementById('description') as HTMLInputElement
-          const _text = document.getElementById('text') as HTMLInputElement
-          const _obj = {
-            alignment: this.alignment,
-            type: 'number',
-            description: _description.value,
-            value: _text.value,
-            isSelected: false,
-            isOn: _currentField.isOn
-          }
-          this.form.tabs[this.currentTab].sections[this.currentSection].fields.splice(
-            this.currentField,
-            1
-          )
-          this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
-          let sectionsChecked = 0
-          for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-            const _array = this.getSelectedFields(i)
-            if (_array.length > 0) {
-              const field_type = useFieldTypeStore()
-              field_type.toggleEditModal()
-              setTimeout(() => {
-                this.editField()
-              }, 500)
-              console.log('array length after save ' + _array.length)
-            } else {
-              sectionsChecked++
-              if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
-                const field_type = useFieldTypeStore()
-                setTimeout(() => {
-                  field_type.toggleEditModal()
-                  this.closeInputModals()
-                }, 500)
-                console.log('no more fields to edit')
-              }
-            }
-          }
-        }
-      } else {
-        if (this.newText) {
-          const _description = document.getElementById('description') as HTMLInputElement
-          const _text = document.getElementById('text') as HTMLInputElement
-          const _obj = {
-            alignment: this.alignment,
-            type: 'text',
-            description: _description.value,
-            value: _text.value,
-            isSelected: false,
-            isOn: _currentField.isOn
-          }
-          this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField] =
-            _obj
-          let sectionsChecked = 0
-          for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-            const _array = this.getSelectedFields(i)
-            if (_array.length > 0) {
-              const field_type = useFieldTypeStore()
-              field_type.toggleEditModal()
-              setTimeout(() => {
-                this.editField()
-              }, 500)
-              console.log('array length after save ' + _array.length)
-            } else {
-              sectionsChecked++
-              if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
-                const field_type = useFieldTypeStore()
-                setTimeout(() => {
-                  field_type.toggleEditModal()
-                  this.closeInputModals()
-                }, 500)
+      // TODO: add save logic to function
 
-                console.log('no more fields to edit')
-              }
-            }
-          }
-        } else if (this.newNumber) {
-          const _description = document.getElementById('description') as HTMLInputElement
-          const _text = document.getElementById('text') as HTMLInputElement
-          const _obj = {
-            alignment: this.alignment,
-            type: 'number',
-            description: _description.value,
-            value: _text.value,
-            isSelected: false,
-            isOn: _currentField.isOn
-          }
-          this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField] =
-            _obj
-          let sectionsChecked = 0
-          for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-            const _array = this.getSelectedFields(i)
-            if (_array.length > 0) {
-              const field_type = useFieldTypeStore()
-              field_type.toggleEditModal()
-              setTimeout(() => {
-                this.editField()
-              }, 500)
-              console.log('array length after save ' + _array.length)
-            } else {
-              sectionsChecked++
-              if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
-                const field_type = useFieldTypeStore()
-                setTimeout(() => {
-                  field_type.toggleEditModal()
-                  this.closeInputModals()
-                }, 500)
-                console.log('no more fields to edit')
-              }
-            }
-          }
-        }
-      }
+      field_type.toggleEditModal()
+      this.editField(true)
     },
+    // async saveEditedField() {
+    //   const _currentField =
+    //     this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]
+    //   if (this.currentSection != this.section) {
+    //     if (this.newText) {
+    //       const _description = document.getElementById('description') as HTMLInputElement
+    //       const _text = document.getElementById('text') as HTMLInputElement
+    //       const _obj = {
+    //         alignment: this.alignment,
+    //         type: 'text',
+    //         description: _description.value,
+    //         value: _text.value,
+    //         isSelected: false,
+    //         isOn: _currentField.isOn
+    //       }
+    //       this.form.tabs[this.currentTab].sections[this.currentSection].fields.splice(
+    //         this.currentField,
+    //         1
+    //       )
+    //       this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+    //       let sectionsChecked = 0
+    //       for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+    //         for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+    //           const _array = this.getSelectedFields(i,j)
+    //           if (_array.length > 0) {
+    //             const field_type = useFieldTypeStore()
+    //             field_type.toggleEditModal()
+    //             setTimeout(() => {
+    //               this.editField()
+    //             }, 500)
+    //             console.log('array length after save ' + _array.length)
+    //           } else {
+    //             sectionsChecked++
+    //             if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+    //               const field_type = useFieldTypeStore()
+    //               setTimeout(() => {
+    //                 field_type.toggleEditModal()
+    //                 this.closeInputModals()
+    //               }, 500)
+
+    //               console.log('no more fields to edit')
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } else if (this.newNumber) {
+    //       const _description = document.getElementById('description') as HTMLInputElement
+    //       const _text = document.getElementById('text') as HTMLInputElement
+    //       const _obj = {
+    //         alignment: this.alignment,
+    //         type: 'number',
+    //         description: _description.value,
+    //         value: _text.value,
+    //         isSelected: false,
+    //         isOn: _currentField.isOn
+    //       }
+    //       this.form.tabs[this.currentTab].sections[this.currentSection].fields.splice(
+    //         this.currentField,
+    //         1
+    //       )
+    //       this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+    //       let sectionsChecked = 0
+    //       for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
+    //         for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+    //           const _array = this.getSelectedFields(i,j)
+    //           if (_array.length > 0) {
+    //             const field_type = useFieldTypeStore()
+    //             field_type.toggleEditModal()
+    //             setTimeout(() => {
+    //               this.editField()
+    //             }, 500)
+    //             console.log('array length after save ' + _array.length)
+    //           } else {
+    //             sectionsChecked++
+    //             if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+    //               const field_type = useFieldTypeStore()
+    //               setTimeout(() => {
+    //                 field_type.toggleEditModal()
+    //                 this.closeInputModals()
+    //               }, 500)
+    //               console.log('no more fields to edit')
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   } else {
+    //     if (this.newText) {
+    //       const _description = document.getElementById('description') as HTMLInputElement
+    //       const _text = document.getElementById('text') as HTMLInputElement
+    //       const _obj = {
+    //         alignment: this.alignment,
+    //         type: 'text',
+    //         description: _description.value,
+    //         value: _text.value,
+    //         isSelected: false,
+    //         isOn: _currentField.isOn
+    //       }
+    //       this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField] =
+    //         _obj
+    //       let sectionsChecked = 0
+    //       for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
+    //         for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+    //           const _array = this.getSelectedFields(i,j)
+    //           if (_array.length > 0) {
+    //             const field_type = useFieldTypeStore()
+    //             field_type.toggleEditModal()
+    //             setTimeout(() => {
+    //               this.editField()
+    //             }, 500)
+    //             console.log('array length after save ' + _array.length)
+    //           } else {
+    //             sectionsChecked++
+    //             if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+    //               const field_type = useFieldTypeStore()
+    //               setTimeout(() => {
+    //                 field_type.toggleEditModal()
+    //                 this.closeInputModals()
+    //               }, 500)
+
+    //               console.log('no more fields to edit')
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } else if (this.newNumber) {
+    //       const _description = document.getElementById('description') as HTMLInputElement
+    //       const _text = document.getElementById('text') as HTMLInputElement
+    //       const _obj = {
+    //         alignment: this.alignment,
+    //         type: 'number',
+    //         description: _description.value,
+    //         value: _text.value,
+    //         isSelected: false,
+    //         isOn: _currentField.isOn
+    //       }
+    //       this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField] =
+    //         _obj
+    //       let sectionsChecked = 0
+    //       for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
+    //         for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+    //           const _array = this.getSelectedFields(i,j)
+    //           if (_array.length > 0) {
+    //             const field_type = useFieldTypeStore()
+    //             field_type.toggleEditModal()
+    //             setTimeout(() => {
+    //               this.editField()
+    //             }, 500)
+    //             console.log('array length after save ' + _array.length)
+    //           } else {
+    //             sectionsChecked++
+    //             if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+    //               const field_type = useFieldTypeStore()
+    //               setTimeout(() => {
+    //                 field_type.toggleEditModal()
+    //                 this.closeInputModals()
+    //               }, 500)
+    //               console.log('no more fields to edit')
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // },
     clearFieldTypeVariables() {
       this.alignment = ''
       this.getFieldProperties = true
@@ -573,76 +611,139 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
     },
     deleteField() {
       let sectionsChecked = 0
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-        const _array = this.getUnselectedFields(i)
-        const _newArray = [] as Array<any>
-        if (_array.length > 0) {
-          for (let yy = 0; yy < _array.length; ++yy) {
-            _newArray.push(this.form.tabs[this.currentTab].sections[i].fields[_array[yy]])
+      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+        for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+          const _array = this.getUnselectedFields(i,j)
+          const _newArray = [] as Array<any>
+          if (_array.length > 0) {
+            for (let yy = 0; yy < _array.length; ++yy) {
+              _newArray.push(this.form.tabs[this.currentTab].sections[i].columns[j].fields[_array[yy]])
+            }
           }
-        }
-        if (_newArray.length === this.form.tabs[this.currentTab].sections[i].fields.length) {
-          sectionsChecked++
-          if (
-            sectionsChecked === this.form.tabs[this.currentTab].sections.length &&
-            i === this.form.tabs[this.currentTab].sections.length - 1
-          ) {
-            const warning = useWarningStore()
-            warning.toggleWarningModal()
-            warning.message = 'Select a field and try again.'
-            warning.header = 'At least one field must be selected to use the Delete tool.'
+          if (_newArray.length === this.form.tabs[this.currentTab].sections[i].columns[j].fields.length) {
+            sectionsChecked++
+            if (
+              sectionsChecked === this.form.tabs[this.currentTab].sections.length &&
+              i === this.form.tabs[this.currentTab].sections.length - 1
+            ) {
+              const warning = useWarningStore()
+              warning.toggleWarningModal()
+              warning.message = 'Select a field and try again.'
+              warning.header = 'At least one field must be selected to use the Delete tool.'
+            }
+          } else if (_newArray != null || _newArray != undefined) {
+            console.log(_newArray)
+            this.form.tabs[this.currentTab].sections[i].columns[j].fields = _newArray
           }
-        } else if (_newArray != null || _newArray != undefined) {
-          console.log(_newArray)
-          this.form.tabs[this.currentTab].sections[i].fields = _newArray
         }
       }
     },
-    editField() {
-      let sectionsChecked = 0
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-        const _array = this.getSelectedFields(i)
-        if (_array.length > 0) {
-          this.currentSection = i
-          this.currentField = _array[0]
-          const field_type = useFieldTypeStore()
-          field_type.toggleEditModal()
-          console.log('array length at start = ' + _array.length)
-          break
-        } else {
-          sectionsChecked++
-          if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+    editField(isLoop: boolean) {
+      const field_type = useFieldTypeStore()
+
+      if(isLoop) {
+        switch(this.editArray.length) {
+          case 0:
+            field_type.toggleEditModal()
+            break
+          case 1:
+            this.currentSection = this.editArray[0].sections
+            this.currentColumn = this.editArray[0].columns
+            this.currentField = this.editArray[0].fields
+            this.editArray = [] as Array<any>
+            field_type.toggleEditModal()
+            break
+          default:
+            this.currentSection = this.editArray[0].sections
+            this.currentColumn = this.editArray[0].columns
+            this.currentField = this.editArray[0].fields
+            this.editArray.splice(0,1)
+            field_type.toggleEditModal()
+        }
+      } else {
+        this.editArray = this.getSelectedFields();
+
+        switch(this.editArray.length) {
+          case 0:
             const warning = useWarningStore()
             warning.toggleWarningModal()
             warning.message = 'Select a field and try again.'
             warning.header = 'At least one field must be selected to use the Edit tool.'
-          }
+            break
+          case 1:
+            this.currentSection = this.editArray[0].sections
+            this.currentColumn = this.editArray[0].columns
+            this.currentField = this.editArray[0].fields
+            this.editArray = [] as Array<any>
+            field_type.toggleEditModal()
+            break
+          default:
+            this.currentSection = this.editArray[0].sections
+            this.currentColumn = this.editArray[0].columns
+            this.currentField = this.editArray[0].fields
+            this.editArray.splice(0,1)
+            field_type.toggleEditModal()
         }
       }
+      // let sectionsChecked = 0
+      // for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+      //   const _array = this.getSelectedFields()
+      //   if (_array.length > 0) {
+      //     this.currentSection = i
+      //     this.currentField = _array[0]
+      //     const field_type = useFieldTypeStore()
+      //     field_type.toggleEditModal()
+      //     console.log('array length at start = ' + _array.length)
+      //     break
+      //   } else {
+      //     sectionsChecked++
+      //     if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+      //       const warning = useWarningStore()
+      //       warning.toggleWarningModal()
+      //       warning.message = 'Select a field and try again.'
+      //       warning.header = 'At least one field must be selected to use the Edit tool.'
+      //     }
+      //   }
+      // }
     },
     copyField() {
-      let sectionsChecked = 0
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; ++i) {
-        const _array = this.getSelectedFields(i)
-        if (_array.length > 0) {
-          for (let yy = 0; yy < _array.length; ++yy) {
-            this.form.tabs[this.currentTab].sections[i].fields.push(
-              _.cloneDeep(this.form.tabs[this.currentTab].sections[i].fields[_array[yy]])
-            )
-            this.form.tabs[this.currentTab].sections[i].fields[
-              this.form.tabs[this.currentTab].sections[i].fields.length - 1
-            ].isSelected = false
-          }
-        } else {
-          sectionsChecked++
-          if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
-            const warning = useWarningStore()
-            warning.toggleWarningModal()
-            warning.message = 'Select a field and try again.'
-            warning.header = 'At least one field must be selected to use the Duplicate tool.'
-          }
+      const _array = this.getSelectedFields()
+      if(_array.length > 0) {
+        for (let i = 0; i < _array.length; i++) {
+          this.form.tabs[this.currentTab].sections[_array[i].sections].columns[_array[i].columns].fields.push(
+            _.cloneDeep(this.form.tabs[this.currentTab].sections[_array[i].sections].columns[_array[i].columns].fields[_array[i].fields]))
+  
+            this.form.tabs[this.currentTab].sections[_array[i].sections].columns[_array[i].columns].
+            fields[this.form.tabs[this.currentTab].sections[_array[i].sections].fields.length - 1].isSelected = false
         }
+      } else {
+        const warning = useWarningStore()
+        warning.toggleWarningModal()
+        warning.message = 'Select a field and try again.'
+        warning.header = 'At least one field must be selected to use the Duplicate tool.'
       }
+      // let sectionsChecked = 0
+      // for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+      //   const _array = this.getSelectedFields()
+      //   if (_array.length > 0) {
+      //     for (let yy = 0; yy < _array.length; ++yy) {
+      //       this.form.tabs[this.currentTab].sections[i].fields.push(
+      //         _.cloneDeep(this.form.tabs[this.currentTab].sections[i].fields[_array[yy]])
+      //       )
+      //       this.form.tabs[this.currentTab].sections[i].fields[
+      //         this.form.tabs[this.currentTab].sections[i].fields.length - 1
+      //       ].isSelected = false
+      //     }
+      //   } else {
+      //     sectionsChecked++
+      //     if (sectionsChecked === this.form.tabs[this.currentTab].sections.length) {
+      //       const warning = useWarningStore()
+      //       warning.toggleWarningModal()
+      //       warning.message = 'Select a field and try again.'
+      //       warning.header = 'At least one field must be selected to use the Duplicate tool.'
+      //     }
+      //   }
+      // }
     },
     getMapKeyByValue(_map: Map<number, number>, _index: number) {
       for (let [key, value] of _map.entries()) {

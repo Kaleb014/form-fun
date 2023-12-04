@@ -206,6 +206,18 @@ onUnmounted(() => {
                     </span>
                   </div>
                 </button>
+
+                <button
+                  class="command-button tooltip"
+                  type="button"
+                  @click="field_type.toggleDeleteColumnModal()">
+                  <img src="../../assets/delete-icon-export.png" width="18" height="22" />
+                  <div class="tooltip-container">
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Column
+                    </span>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -234,7 +246,7 @@ onUnmounted(() => {
                 </div>
               </button>
 
-              <button class="command-button tooltip" type="button" @click="edit.editField()">
+              <button class="command-button tooltip" type="button" @click="edit.editField(false)">
                 <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                 <div class="tooltip-container">
                   <span class="up-tooltip-text edit" v-if="tool_tips.useToolTips">Edit</span>
@@ -277,7 +289,7 @@ onUnmounted(() => {
 
       <div class="scrollable">
         <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -510,6 +522,7 @@ onUnmounted(() => {
                     </span>
                   </div>
                 </button>
+
                 <button
                   class="command-button tooltip"
                   type="button"
@@ -530,6 +543,18 @@ onUnmounted(() => {
                   <div class="tooltip-container">
                     <span class="up-tooltip-text add-section" v-if="tool_tips.useToolTips">
                       Add Column
+                    </span>
+                  </div>
+                </button>
+
+                <button
+                  class="command-button tooltip"
+                  type="button"
+                  @click="field_type.toggleDeleteColumnModal()">
+                  <img src="../../assets/delete-icon-export.png" width="18" height="22" />
+                  <div class="tooltip-container">
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Column
                     </span>
                   </div>
                 </button>
@@ -561,7 +586,7 @@ onUnmounted(() => {
                 </div>
               </button>
 
-              <button class="command-button tooltip" type="button" @click="edit.editField()">
+              <button class="command-button tooltip" type="button" @click="edit.editField(false)">
                 <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                 <div class="tooltip-container">
                   <span class="up-tooltip-text edit" v-if="tool_tips.useToolTips">Edit</span>
@@ -860,6 +885,18 @@ onUnmounted(() => {
                     </span>
                   </div>
                 </button>
+
+                <button
+                  class="command-button tooltip"
+                  type="button"
+                  @click="field_type.toggleDeleteColumnModal()">
+                  <img src="../../assets/delete-icon-export.png" width="18" height="22" />
+                  <div class="tooltip-container">
+                    <span class="up-tooltip-text delete-section" v-if="tool_tips.useToolTips">
+                      Delete Column
+                    </span>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -888,7 +925,7 @@ onUnmounted(() => {
                 </div>
               </button>
 
-              <button class="command-button tooltip" type="button" @click="edit.editField()">
+              <button class="command-button tooltip" type="button" @click="edit.editField(false)">
                 <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                 <div class="tooltip-container">
                   <span class="up-tooltip-text edit" v-if="tool_tips.useToolTips">Edit</span>
@@ -931,7 +968,7 @@ onUnmounted(() => {
 
       <div class="scrollable">
         <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -991,7 +1028,7 @@ onUnmounted(() => {
                 </div>
                 
               </div>
-
+              
             </div>
           </div>
         </div>
