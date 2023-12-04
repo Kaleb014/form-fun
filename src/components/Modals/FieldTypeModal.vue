@@ -130,7 +130,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="text" type="text" placeholder=" Value..." />
+              <input id="label" type="text" placeholder=" Value..." />
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="text" type="text" placeholder=" Value..." />
+              <input id="number" type="text" placeholder=" Value..." />
             </div>
           </div>
         </div>
@@ -225,7 +225,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="text" type="text" placeholder=" Value..." />
+              <input id="item" type="text" placeholder=" Value..." />
             </div>
           </div>
         </div>
@@ -257,7 +257,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="text" type="text" placeholder=" Value..." />
+              <input id="formula" type="text" placeholder=" Value..." />
             </div>
           </div>
         </div>
@@ -310,7 +310,7 @@ onUnmounted(() => {
               <span>&emsp;Alignment</span>
             <div class="field-button">
               <label class="switch">
-                <input type="checkbox" name="field-alignment" :value="true" />
+                <input type="checkbox" name="field-alignment" value="true" />
                 <span class="slider"></span>
               </label>
               <span>&emsp;Indent</span>
@@ -372,6 +372,37 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <div class="modal" v-if="edit.newLabel">
+      <div class="modal-inner type-modal-inner">
+        <div class="header-row">
+          <div class="header-left">Edit Field: Label</div>
+
+          <div class="header-right">
+            <button type="button" class="exit-button" @click="field_type.toggleAddModal(); edit.closeInputModals()">
+              ⓧ
+            </button>
+          </div>
+        </div>
+
+        <div class="scrollable">
+          <div class="row">
+            <div class="row-inner-override">
+              <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
+              <input id="label" type="text" placeholder=" Value..." :value="currentField.value"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <div class="small-body-button">
+            <div class="modal_lower_button">
+              <button type="button" @click="edit.saveEditedField('label');">Save</button>
+              <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal" v-if="edit.newText">
       <div class="modal-inner type-modal-inner">
         <div class="header-row">
@@ -396,7 +427,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField()">Save</button>
+              <button type="button" @click="edit.saveEditedField('text')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -419,7 +450,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="text" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="number" type="text" placeholder=" Value..." :value="currentField.value" />
             </div>
           </div>
         </div>
@@ -427,7 +458,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField()">Save</button>
+              <button type="button" @click="edit.saveEditedField('number')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -450,7 +481,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="text" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="item" type="text" placeholder=" Value..." :value="currentField.value" />
             </div>
           </div>
         </div>
@@ -458,7 +489,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField()">Save</button>
+              <button type="button" @click="edit.saveEditedField('item')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -481,7 +512,7 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="text" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="formula" type="text" placeholder=" Value..." :value="currentField.value" />
             </div>
           </div>
         </div>
@@ -489,7 +520,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField()">Save</button>
+              <button type="button" @click="edit.saveEditedField('formula')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
