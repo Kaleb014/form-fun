@@ -6,7 +6,7 @@ import { useEditFormStore } from '../../stores/editForm'
 const field_type = useFieldTypeStore()
 const edit = useEditFormStore()
 const currentField =
-  edit.form.tabs[edit.currentTab].sections[edit.currentSection].fields[edit.currentField]
+  edit.form.tabs[edit.currentTab].sections[edit.currentSection].columns[edit.currentColumn].fields[edit.currentField]
 const currentSection = edit.form.tabs[edit.currentTab].sections[edit.currentSection]
 
 onUnmounted(() => {
@@ -18,7 +18,7 @@ onUnmounted(() => {
 <template>
   <div v-if="field_type.addFieldTypeModalActive">
     <div class="modal" v-if="edit.getFieldProperties">
-      <div class="modal-inner">
+      <div class="modal-inner properties-modal-inner">
         <div class="header-row">
           <div class="header-left">New Field</div>
 
@@ -31,29 +31,25 @@ onUnmounted(() => {
 
         <div class="scrollable">
           <div class="field-type-buttons-container">
-            <span>Section</span>
-            <div class="field-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
-              <label class="switch">
-                <input type="radio" name="field-section" :value="index"/>
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Section {{ index + 1 }}</span>
+            <div>
+              <div v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="section">
+              <span>&emsp;Section {{ sectionIndex + 1 }}</span>
+                <div>
+                <div class="field-button" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="column">
+                  <label class="switch">
+                    <input type="radio" name="field-column" :value="columnIndex"/>
+                    <span class="slider"></span>
+                  </label>
+                  <span>&emsp;Column {{ columnIndex + 1 }}</span>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
-          <!-- TODO: Must create a Section select Modal, then generate this modal after submit -->
+          
           <div class="field-type-buttons-container">
-            <span>Column</span>
-            <div class="field-button" v-for="(column, index) in edit.form.tabs[edit.currentTab].sections" :key="column">
-              <label class="switch">
-                <input type="radio" name="field-section" :value="index"/>
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Column {{ index + 1 }}</span>
-            </div>
-          </div>
-          <!-- TODO: Create a data structure that stores the below values, then create elements by looping, like I did with Sections -->
-          <div class="field-type-buttons-container">
-            <span>Alignment</span>
+            <div>
+              <span>&emsp;Alignment</span>
             <div class="field-button">
               <label class="switch">
                 <input type="checkbox" name="field-alignment" :value="true" />
@@ -61,10 +57,12 @@ onUnmounted(() => {
               </label>
               <span>&emsp;Indent</span>
             </div>
+            </div>
           </div>
 
           <div class="field-type-buttons-container">
-            <span>Field Type</span>
+            <div>
+              <span>&emsp;Field Type</span>
             <div class="field-button">
               <label class="switch">
                 <input type="radio" name="field-type" value="Label" />
@@ -100,7 +98,9 @@ onUnmounted(() => {
               </label>
               <span>&emsp;Formula</span>
             </div>
+            </div>
           </div>
+
         </div>
 
         <div class="button-container">
@@ -289,65 +289,38 @@ onUnmounted(() => {
 
         <div class="scrollable">
           <div class="field-type-buttons-container">
-            <span>Section</span>
-            <div class="field-button" v-for="(section, index) in edit.form.tabs[edit.currentTab].sections" :key="section">
+            <div>
+              <div v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="section">
+              <span>&emsp;Section {{ sectionIndex + 1 }}</span>
+                <div>
+                <div class="field-button" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="column">
+                  <label class="switch">
+                    <input type="radio" name="field-column" :value="columnIndex"/>
+                    <span class="slider"></span>
+                  </label>
+                  <span>&emsp;Column {{ columnIndex + 1 }}</span>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          
+          <div class="field-type-buttons-container">
+            <div>
+              <span>&emsp;Alignment</span>
+            <div class="field-button">
               <label class="switch">
-                <input type="radio" name="field-section" value="index" />
+                <input type="checkbox" name="field-alignment" :value="true" />
                 <span class="slider"></span>
               </label>
-              <span>&emsp;Section {{ index + 1 }}</span>
-              <!--<input class="pointer" type="radio" name="field-section" :value="index"/>&emsp;Section {{ index+1 }}-->
+              <span>&emsp;Indent</span>
+            </div>
             </div>
           </div>
 
           <div class="field-type-buttons-container">
-            <span>Alignment</span>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Left" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Left</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Left-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Left-tabbed</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Center" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Center</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Center-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Center-tabbed</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Right" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Right</span>
-            </div>
-            <div class="field-button">
-              <label class="switch">
-                <input type="radio" name="field-alignment" value="Right-tabbed" />
-                <span class="slider"></span>
-              </label>
-              <span>&emsp;Right-tabbed</span>
-            </div>
-          </div>
-
-          <div class="field-type-buttons-container">
-            <span>Field Type</span>
+            <div>
+              <span>&emsp;Field Type</span>
             <div class="field-button">
               <label class="switch">
                 <input type="radio" name="field-type" value="Label" />
@@ -383,7 +356,9 @@ onUnmounted(() => {
               </label>
               <span>&emsp;Formula</span>
             </div>
+            </div>
           </div>
+
         </div>
 
         <div class="button-container">
@@ -533,7 +508,10 @@ onUnmounted(() => {
 .type-modal-inner {
   max-width: 250px;
 }
-
+.properties-modal-inner {
+  max-width: 500px;
+  max-height: 750px;
+}
 .row-inner-override {
   text-align: center;
 }
@@ -550,6 +528,8 @@ onUnmounted(() => {
   font-size: medium;
   color: #edf0f1;
   white-space: nowrap;
+  display: flex;
+  justify-content: center;
 }
 
 .scrollable {

@@ -30,11 +30,13 @@ onUnmounted(() => {
 
 <template>
   <div class="modal" v-if="edit.editModalActive">
-    <div class="modal-inner">
+    <div class="modal-inner" :class="edit.isExpanded ? 'modal-inner-full' : 'modal-inner-collapsed'">
       <div name="title-bar" class="header-row">
         <div class="header-left">Form: {{ edit.form.content }}</div>
 
         <div class="header-right">
+          <button v-if="edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2750</button>
+          <button v-if="!edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2610</button>
           <button type="button" class="exit-button" @click="edit.toggleModal()">ⓧ</button>
         </div>
       </div>
@@ -289,7 +291,7 @@ onUnmounted(() => {
 
       <div class="scrollable">
         <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
+          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -369,11 +371,13 @@ onUnmounted(() => {
   </div>
 
   <div class="modal" v-if="add_clicked.addModalActive">
-    <div class="modal-inner">
+    <div class="modal-inner" :class="edit.isExpanded ? 'modal-inner-full' : 'modal-inner-collapsed'">
       <div name="title-bar" class="header-row">
         <div class="header-left">Form: {{ edit.form.content }}</div>
 
         <div class="header-right">
+          <button v-if="edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2750</button>
+          <button v-if="!edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2610</button>
           <button type="button" class="exit-button" @click="add_clicked.toggleModal()">ⓧ</button>
         </div>
       </div>
@@ -629,7 +633,7 @@ onUnmounted(() => {
 
       <div class="scrollable">
         <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
+          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -709,11 +713,13 @@ onUnmounted(() => {
   </div>
 
   <div class="modal" v-if="copy_clicked.copyModalActive">
-    <div class="modal-inner">
+    <div class="modal-inner" :class="edit.isExpanded ? 'modal-inner-full' : 'modal-inner-collapsed'">
       <div name="title-bar" class="header-row">
         <div class="header-left">Form: {{ edit.form.content }}</div>
 
         <div class="header-right">
+          <button v-if="edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2750</button>
+          <button v-if="!edit.isExpanded" type="button" class="exit-button" @click="edit.isExpanded = !edit.isExpanded">&#x2610</button>
           <button type="button" class="exit-button" @click="copy_clicked.toggleModal()">ⓧ</button>
         </div>
       </div>
@@ -968,7 +974,7 @@ onUnmounted(() => {
 
       <div class="scrollable">
         <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex" class="left-right-center column">
+          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -1054,7 +1060,9 @@ onUnmounted(() => {
 input[type="text"] {
   max-width: 200px;
 }
-
+.exit-button {
+  margin-left: 10px;
+}
 .tabbed {
   margin-left: var(--formFieldSpacing);
 }
@@ -1131,41 +1139,31 @@ input[type="text"] {
   display: flex;
   height: 100%;
   width: 100%;
-  border-top: 1px solid #4a4c55;
 }
 
-.section:nth-child(1) {
-  border-top: none;
+.column {
+  width: 100%;
+  border-left: 1px solid #4a4c55;
+  border-bottom: 1px solid #4a4c55;
+  padding: 8px;
+}
+
+.section:last-child .column {
+  border-bottom: none;
 }
 
 .scrollable {
   padding: 0;
   overflow: auto;
+  width: 100%;
   position: relative;
   margin-bottom: 35px;
   height: calc(100% - 35px);
   justify-content: space-evenly;
 }
 
-.column {
-  width: 100%;
-  border-left: 1px solid #4a4c55;
-}
-
 .column:nth-child(1) {
   border-left: none;
-}
-
-.left-right-center {
-  display: flex;
-  justify-content: space-evenly;
-  padding: 8px;
-}
-
-.modal-inner {
-  height: 750px;
-  width: 1000px;
-  max-width: 100vw;
 }
 
 .row {
@@ -1182,39 +1180,6 @@ input[type="text"] {
   display: flex;
   white-space: nowrap;
   align-items: center;
-}
-
-.left {
-  position: relative;
-  justify-content: left;
-}
-
-.right {
-  position: relative;
-  justify-content: left;
-}
-
-.center {
-  position: relative;
-  justify-content: left;
-}
-
-.left-tabbed {
-  position: relative;
-  justify-content: left;
-  margin-left: 30px;
-}
-
-.right-tabbed {
-  position: relative;
-  justify-content: left;
-  margin-left: 30px;
-}
-
-.center-tabbed {
-  position: relative;
-  justify-content: left;
-  margin-left: 30px;
 }
 
 .field-checkbox {

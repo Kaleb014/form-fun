@@ -33,6 +33,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       mouseOverSectionTools: false,
       mouseOverTabTools: false,
       mouseOverFieldtools: false,
+      isExpanded: false,
       showTabTools: false,
       showSectionTools: false,
       showFieldTools: false,
@@ -51,6 +52,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       indentedChecked: false,
       alignment: '',
       section: 0,
+      column: 0,
       currentTab: 0,
       currentSection: 0,
       currentColumn: 0,
@@ -172,34 +174,41 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       this.newLabel = false
     },
     setFieldProperties() {
-      //Section
-      const _section = document.getElementsByName('field-section') as NodeListOf<HTMLInputElement>
-      for (let i = 0; i <= _section.length; ++i) {
-        if (i === _section.length) {
-          console.log('no section selected')
+      //Section/Column
+      const _column = document.getElementsByName('field-column') as NodeListOf<HTMLInputElement>
+      let _sectionIndex = 0
+      let _columnLength = this.form.tabs[this.currentTab].sections[_sectionIndex].columns.length
+      let _columnIndex = 0
+
+      for(let i = 0; i <= _column.length; i++) {
+        if (i === _column.length) {
           const warning = useWarningStore()
           warning.toggleWarningModal()
-          warning.message = 'Select a section and try again.'
-          warning.header = 'Section is a required field.'
+          warning.message = 'Select a column and try again.'
+          warning.header = 'Column is a required field.'
           return
         } else {
-          console.log('checking section value')
-          if (_section[i].checked) {
-            this.section = i
+          if(_column[i].checked) {
+            this.section = _sectionIndex
+            this.column = _columnIndex
             break
+          } else {
+            if (_columnIndex === _columnLength-1) {
+              _columnIndex = 0
+              _sectionIndex++
+              _columnLength = this.form.tabs[this.currentTab].sections[_sectionIndex].columns.length
+            } else {
+              _columnIndex++
+            }
           }
         }
       }
       //Alignment
       const _alignment = document.querySelector('input[name="field-alignment"]:checked' ) as HTMLInputElement
       if (_alignment === null || _alignment === undefined) {
-        const warning = useWarningStore()
-        warning.toggleWarningModal()
-        warning.message = 'Select an alignment and try again.'
-        warning.header = 'Alignment is a required field.'
-        return
+        this.alignment = ''
       } else if (!_alignment) {
-        return
+        this.alignment = ''
       } else {
         this.alignment = 'tabbed'
       }
@@ -214,28 +223,22 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       } else {
         switch (_type.value) {
           case 'Label':
-            console.log(JSON.stringify(_type.value))
             this.newLabel = true
             break
           case 'Text':
-            console.log(JSON.stringify(_type.value))
             this.newText = true
             break
           case 'Number':
-            console.log(JSON.stringify(_type.value))
             this.newNumber = true
             break
           case 'Item':
-            console.log(JSON.stringify(_type.value))
             this.newItem = true
             break
           case 'Formula':
-            console.log(JSON.stringify(_type.value))
             this.newFormula = true
             break
         }
         this.getFieldProperties = false
-        console.log('bottom of function')
       }
     },
     selectField(_field: any) {
@@ -369,7 +372,14 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       }
     },
     addColumn(_section: number) {
-      this.form.tabs[this.currentTab].sections[_section].columns.push({ fields: [] })
+      if(this.form.tabs[this.currentTab].sections[_section].columns.length < 4) {
+        this.form.tabs[this.currentTab].sections[_section].columns.push({ fields: [] })
+      } else {
+        const warningStore = useWarningStore()
+        warningStore.toggleWarningModal()
+        warningStore.header = 'Select a different section or create a new section for additional columns and fields.'
+        warningStore.message = 'Cannot have more than 4 columns per section.'
+      }
       useFieldTypeStore().toggleAddColumnModal()
     },
     deleteColumn() {
@@ -388,7 +398,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       }
     },
     saveNewField() {
-      this.form.tabs[this.currentTab].sections[this.currentSection].fields[this.currentField]
       if (this.newLabel) {
         const _description = document.getElementById('description') as HTMLInputElement
         const _text = document.getElementById('text') as HTMLInputElement
@@ -400,7 +409,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           isSelected: false,
           isOn: true
         }
-        this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
       } else if (this.newText) {
         const _description = document.getElementById('description') as HTMLInputElement
         const _text = document.getElementById('text') as HTMLInputElement
@@ -412,7 +421,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           isSelected: false,
           isOn: true
         }
-        this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
       } else if (this.newNumber) {
         const _description = document.getElementById('description') as HTMLInputElement
         const _text = document.getElementById('text') as HTMLInputElement
@@ -424,7 +433,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           isSelected: false,
           isOn: true
         }
-        this.form.tabs[this.currentTab].sections[this.section].fields.push(_obj)
+        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
       }
     },
     saveEditedField() {
