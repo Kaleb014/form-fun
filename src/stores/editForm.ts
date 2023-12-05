@@ -59,7 +59,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       currentSection: 0,
       currentColumn: 0,
       currentField: 0,
-      selectionArray: [] as Array<any>,
       editArray: [] as SelectionArray,
       form: {
         isSelected: false,
@@ -259,11 +258,19 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       }
       return _array
     },
-    getUnselectedFields(_section: number, _column: number) {
-      const _array = [] as Array<any>
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections[_section].columns[_column].fields.length; ++i) {
-        if (!this.form.tabs[this.currentTab].sections[_section].columns[_column].fields[i].isSelected) {
-          _array.push(i)
+    getUnselectedFields() {
+      const _array = [] as SelectionArray
+      for(let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+        for(let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+          for (let k = 0; k < this.form.tabs[this.currentTab].sections[i].columns[j].fields.length; k++) {
+            if (!this.form.tabs[this.currentTab].sections[i].columns[j].fields[k].isSelected) {
+              _array.push({
+                sections: i,
+                columns: j,
+                fields: k
+              })
+            }
+          }
         }
       }
       return _array
@@ -530,31 +537,38 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       this.newNumber = false
     },
     deleteField() {
-      let sectionsChecked = 0
-      for (let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
-        for (let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
-          const _array = this.getUnselectedFields(i,j)
-          const _newArray = [] as Array<any>
-          if (_array.length > 0) {
-            for (let yy = 0; yy < _array.length; ++yy) {
-              _newArray.push(this.form.tabs[this.currentTab].sections[i].columns[j].fields[_array[yy]])
+      const _selected = this.getSelectedFields()
+
+      if(_selected.length > 0){
+        const _array = this.getUnselectedFields()
+        const _newArray = [] as Array<any>
+        
+        if(_array.length > 0) {
+          for(let i = 0; i < _array.length; i++) {
+            _newArray.push(this.form.tabs[this.currentTab].sections[_array[i].sections].columns[_array[i].columns].fields[_array[i].fields])
+          }
+          
+          for(let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+            for(let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+              this.form.tabs[this.currentTab].sections[i].columns[j].fields = []
             }
           }
-          if (_newArray.length === this.form.tabs[this.currentTab].sections[i].columns[j].fields.length) {
-            sectionsChecked++
-            if (
-              sectionsChecked === this.form.tabs[this.currentTab].sections.length &&
-              i === this.form.tabs[this.currentTab].sections.length - 1
-            ) {
-              const warning = useWarningStore()
-              warning.toggleWarningModal()
-              warning.message = 'Select a field and try again.'
-              warning.header = 'At least one field must be selected to use the Delete tool.'
+          
+          for(let i = 0; i < _newArray.length; i++) {
+            this.form.tabs[this.currentTab].sections[_array[i].sections].columns[_array[i].columns].fields.push(_newArray[i])
+          }
+        } else {
+          for(let i = 0; i < this.form.tabs[this.currentTab].sections.length; i++) {
+            for(let j = 0; j < this.form.tabs[this.currentTab].sections[i].columns.length; j++) {
+              this.form.tabs[this.currentTab].sections[i].columns[j].fields = []
             }
-          } else if (_newArray != null || _newArray != undefined) {
-            this.form.tabs[this.currentTab].sections[i].columns[j].fields = _newArray
           }
         }
+      } else {
+        const warning = useWarningStore()
+        warning.toggleWarningModal()
+        warning.message = 'Select a field and try again.'
+        warning.header = 'At least one field must be selected to use the Delete tool.'
       }
     },
     editField(isLoop: boolean) {
