@@ -524,7 +524,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           this.editField(true)
         }, 500)
       } else {
-        this.editArray.splice(0,1)
+        this.editArray = [] as SelectionArray
       }
     },
     clearFieldTypeVariables() {
@@ -577,7 +577,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       if(isLoop) {
         switch(this.editArray.length) {
           case 0:
-            field_type.toggleEditModal()
             break
           default:
             this.currentSection = this.editArray[0].sections
