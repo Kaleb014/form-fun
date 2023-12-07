@@ -132,7 +132,7 @@ const edit = useEditFormStore()
 .tabs-container {
   width: 100%;
   font-size: medium;
-  color: #edf0f1;
+  color: var(--white);
   white-space: nowrap;
   padding: 5px;
 }
@@ -147,7 +147,7 @@ const edit = useEditFormStore()
 span {
   width: 100%;
   font-size: medium;
-  color: #edf0f1;
+  color: var(--white);
 }
 
 

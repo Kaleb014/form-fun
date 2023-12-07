@@ -196,6 +196,29 @@ onUnmounted(() => {
                     </span>
                   </div>
                 </button>
+              </div>
+            </div>
+
+            <button
+              class="ellipses-command-button tooltip"
+              type="button"
+              @click="edit.showColumnTools = !edit.showColumnTools">
+              <img
+                :src="edit.mouseOverColumnstools ? _ellipsesImgHover : _ellipsesImg"
+                width="5"
+                height="20"
+                @mouseenter="edit.mouseOverColumnstools = true"
+                @mouseleave="edit.mouseOverColumnstools = false"
+              />
+              <div class="tooltip-container">
+                <span class="right-tooltip-text section-tools" v-if="tool_tips.useToolTips">
+                  Column Tools
+                </span>
+              </div>
+            </button>
+
+            <div :class="edit.showColumnTools ? 'button_tools' : 'button_tools_hidden'">
+              <div class="medium-command-button">
 
                 <button
                   class="command-button tooltip"
@@ -327,7 +350,8 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <textarea class="field-value">{{ field.value }}</textarea>
+                  <textarea class="field-value"
+                  >{{ field.value }}</textarea>
                 </div>
               </div>
 
@@ -669,7 +693,8 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <textarea class="field-value">{{ field.value }}</textarea>
+                  <textarea class="field-value"
+                  >{{ field.value }}</textarea>
                 </div>
               </div>
 
@@ -1057,6 +1082,13 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+/*
+ style="background-color: var(--middle-grey);"
+*/
+.middle-grey {
+  background-color: var(--middle-grey);
+}
+
 input[type="text"] {
   max-width: 200px;
 }
@@ -1077,14 +1109,18 @@ input[type="text"] {
   transition: all 0.5s ease-in-out;
   opacity: 0;
   visibility: hidden;
+  margin-top: 4px;
 }
 
 .button_tools {
+  margin-top: 4px;
+  height: 100%;
   transition: all 0.5s ease-in-out;
   opacity: 100;
 }
 
 .field-value-row {
+  height: 100%;
   position: relative;
   margin-left: var(--formFieldSpacing);
 }
@@ -1098,9 +1134,8 @@ input[type="text"] {
   border: none;
   border-radius: 3px;
   box-shadow: 0 0 0 1px #5f616d;
-  outline-color: transparent; /* for high contrast modes */
+  outline-color: transparent;
   transition: 0.1s;
-  /*outline:#5f616d 1px solid;*/
 }
 
 .arrow-button {
@@ -1137,15 +1172,22 @@ input[type="text"] {
 
 .section {
   display: flex;
-  height: 100%;
-  width: 100%;
+  height: auto;
+  min-height: 50%;
+  min-width: 100%;
+  width: fit-content;
+  background-color: var(--black);
 }
 
 .column {
+  min-height: 100%;
+  margin: 5px;
   width: 100%;
-  border-left: 1px solid #4a4c55;
-  border-bottom: 1px solid #4a4c55;
+  border-radius: 8px;
   padding: 8px;
+  background-color: var(--dark-grey);
+  box-shadow: 3px 3px 5px 2px rgba(0,0,0,0.1), 3px 3px 4px 2px rgba(0,0,0,0.6);
+
 }
 
 .section:last-child .column {
@@ -1160,6 +1202,7 @@ input[type="text"] {
   margin-bottom: 35px;
   height: calc(100% - 35px);
   justify-content: space-evenly;
+  background-color: var(--black);
 }
 
 .column:nth-child(1) {
@@ -1196,18 +1239,19 @@ input[type="text"] {
 }
 
 textarea {
-  width: 250px;
+  width: 100%;
   height: 150px;
+  /* width: 200px;
+  height: 130px; */
 }
 
 .tools {
-  border-bottom: 1px solid #4a4c55;
+  border-bottom: 1px solid var(--border-color);
 }
 .permanent-row {
   width: 100%;
   min-height: 35px;
   display: flex;
-  margin-top: 6px;
   padding-left: 8px;
   padding-right: 8px;
   white-space: nowrap;
@@ -1218,12 +1262,15 @@ textarea {
   width: 50%;
   display: flex;
   justify-content: right;
+  align-items: center;
+  font-size: large;
 }
 
 .permanent-left {
   width: 50%;
   display: flex;
   justify-content: left;
+  align-items: center;
   font-size: large;
 }
 

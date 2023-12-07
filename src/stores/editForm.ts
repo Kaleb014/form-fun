@@ -33,11 +33,13 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       addModalActive: false,
       editWarningModalActive: false,
       mouseOverSectionTools: false,
+      mouseOverColumnstools: false,
       mouseOverTabTools: false,
       mouseOverFieldtools: false,
       isExpanded: false,
       showTabTools: false,
       showSectionTools: false,
+      showColumnTools: false,
       showFieldTools: false,
       missingInfo: false,
       currentForm: -1,
@@ -419,6 +421,8 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           type: 'text',
           description: _description.value,
           value: _text.value,
+          width: 200,
+          height: 130,
           isSelected: false,
           isOn: true
         }
@@ -470,6 +474,8 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         description: _description.value,
         value: '',
         type: '',
+        width: -1,
+        height: -1,
         alignment: this.alignment,
         isSelected: false,
         isOn: _currentField.isOn,
@@ -485,6 +491,13 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           const _text = document.getElementById('text') as HTMLInputElement
           _obj.type = 'text'
           _obj.value = _text.value
+          if(_currentField.type === _obj.type) {
+            _obj.width = _currentField.width
+            _obj.height = _currentField.height
+          } else {
+            _obj.width = 200
+            _obj.height = 130
+          }
           break
         case 'number':
           const _number = document.getElementById('number') as HTMLInputElement

@@ -557,7 +557,7 @@ onUnmounted(() => {
 .field-type-buttons-container {
   width: 100%;
   font-size: medium;
-  color: #edf0f1;
+  color: var(--white);
   white-space: nowrap;
   display: flex;
   justify-content: center;

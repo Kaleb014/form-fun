@@ -70,12 +70,12 @@ a:hover {
   content: '';
   position: absolute;
   transform: rotate(45deg);
-  background-color: #24252a;
+  background-color: var(--dark-grey);
   padding: 4px;
   top: -5.25px;
   right: calc(10% - 4px);
-  border-top: 1px solid #4a4c55;
-  border-left: 1px solid #4a4c55;
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
 }
 
 .menu-modal-inner {
@@ -84,8 +84,8 @@ a:hover {
   height: fit-content;
   width: 100%;
   height: 275px;
-  border: 1px solid #4a4c55;
-  background-color: #24252a;
+  border: 1px solid var(--border-color);
+  background-color: var(--dark-grey);
   border-radius: 0.5rem;
   /*border: 1px solid #34353b;
     box-shadow: 2px 6px 6px 2px rgba(0,0, 0, 0.1), 0 2px 4px 2px rgba(0,0, 0, 0.6);*/
