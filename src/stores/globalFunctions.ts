@@ -6,7 +6,7 @@ export const useGlobalFunctionStore = defineStore('globalFunctions', {
   },
   actions: {
     ScrollRight() {
-      const container = document.getElementById('tab-left')
+      const container = document.getElementById('tab-left') as HTMLButtonElement
       setTimeout(() => {
         if (this.scrollRight) {
           this.SideScroll(container, 'right', 50, 25, 30)
@@ -16,7 +16,7 @@ export const useGlobalFunctionStore = defineStore('globalFunctions', {
     },
 
     ScrollLeft() {
-      const container = document.getElementById('tab-left')
+      const container = document.getElementById('tab-left') as HTMLButtonElement
       setTimeout(() => {
         if (this.scrollLeft) {
           this.SideScroll(container, 'left', 50, 25, 30)
@@ -25,7 +25,7 @@ export const useGlobalFunctionStore = defineStore('globalFunctions', {
       }, 250)
     },
 
-    SideScroll(element: any, direction: string, speed: number, distance: number, step: number) {
+    SideScroll(element: HTMLButtonElement, direction: string, speed: number, distance: number, step: number) {
       let scrollAmount = 0
       let slideTimer = setInterval(function () {
         if (direction == 'left') {

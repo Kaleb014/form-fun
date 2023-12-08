@@ -22,6 +22,9 @@ const global = useGlobalFunctionStore()
 const _ellipsesImg = _ellipses
 const _ellipsesImgHover = _ellipsesHover
 
+// TODO: Right-click commands - "Copy, edit, paste, delete, resize, on/off"
+// TODO: Currently, resizing text fields on dbl-click- update to a right-click menu option
+
 onUnmounted(() => {
   edit.resetState()
   console.log('calling reset')
@@ -350,7 +353,12 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <textarea class="field-value"
+                  <textarea
+                  v-model="field.value"
+                  class="field-value"
+                  :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
+                  :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
+                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -693,7 +701,12 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <textarea class="field-value"
+                  <textarea
+                  v-model="field.value"
+                  class="field-value"
+                  :style="{ 'width': field.width + 'px', 'height': field.height + 'px', 'resize': field.isResizable ? 'both' : 'none' }"
+                  :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
+                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -1035,7 +1048,13 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <textarea class="field-value">{{ field.value }}</textarea>
+                  <textarea
+                  v-model="field.value"
+                  class="field-value"
+                  :style="{ 'width': field.width + 'px', 'height': field.height + 'px', 'resize': field.isResizable ? 'both' : 'none' }"
+                  :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
+                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
+                  >{{ field.value }}</textarea>
                 </div>
               </div>
 
@@ -1238,11 +1257,11 @@ input[type="text"] {
   font-size: medium;
 }
 
-textarea {
-  width: 100%;
-  height: 150px;
-  /* width: 200px;
-  height: 130px; */
+.not-resizable {
+  resize: none;
+}
+.resizable {
+  resize: both;
 }
 
 .tools {

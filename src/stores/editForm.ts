@@ -423,6 +423,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           value: _text.value,
           width: 200,
           height: 130,
+          isResizable: false,
           isSelected: false,
           isOn: true
         }
@@ -478,8 +479,12 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         height: -1,
         alignment: this.alignment,
         isSelected: false,
+        isResizable: false,
         isOn: _currentField.isOn,
       }
+
+      const doc = document.getElementById('textarea') as HTMLInputElement
+      doc.style.width
 
       switch(_type) {
         case 'label':
@@ -539,6 +544,23 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       } else {
         this.editArray = [] as SelectionArray
       }
+    },
+    saveFieldDimensions(_field: any, _index: number, _section: number, _column: number) {
+      const field = this.form.tabs[this.currentTab].sections[_section].columns[_column].fields[_index]
+      if(_field.isResizable) {
+        const _textArea = document.getElementsByName('resizeTextArea') as NodeListOf<HTMLTextAreaElement>
+        field.width = _textArea[0].style.width
+        field.height = _textArea[0].style.height
+        console.log(_textArea[0].style.width + ' ' + _textArea[0].style.height)
+        console.log(_field.width + ' ' + _field.height)
+        this.toggleResize(_field)
+      } else {
+        this.toggleResize(_field)
+        console.log(_field.isResizable)
+      }
+    },
+    toggleResize(_field: any) {
+      _field.isResizable = !_field.isResizable
     },
     clearFieldTypeVariables() {
       this.alignment = ''
