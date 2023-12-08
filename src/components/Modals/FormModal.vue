@@ -29,7 +29,7 @@ const _ellipsesImgHover = _ellipsesHover
 // TODO: Currently, resizing text fields on dbl-click- update to a right-click menu option
 
 onMounted(() => {
-  document.addEventListener('mousedown', e => {
+  document.addEventListener('contextmenu', e => {
     if(e.button == 2) {
       console.log('right clicked');
       actions_clicked.getMousePosition(e);
@@ -38,9 +38,10 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  document.removeEventListener('mousedown', event => {
-    if(event.button == 2) {
-      (e: any) => actions_clicked.getMousePosition(e)
+  document.removeEventListener('contextmenu', e => {
+    if(e.button == 2) {
+      console.log('right clicked');
+      actions_clicked.getMousePosition(e);
     }
   })
   edit.resetState()
@@ -371,11 +372,12 @@ onUnmounted(() => {
                 </div>
                 <div class="field-value-row">
                   <textarea
+                  oncontextmenu="return false"
                   v-model="field.value"
-                  class="field-value"
+                  class="field-value action_list"
                   :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
-                  @click.right.prevent="actions_clicked.toggleModal()"
+                  @click.right="actions_clicked.getFieldInfo('field', 'text', index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
                   @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
                   >{{ field.value }}</textarea>
                 </div>

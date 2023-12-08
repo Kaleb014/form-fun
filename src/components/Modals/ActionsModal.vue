@@ -6,15 +6,18 @@ const actions_clicked = useActionStore()
 
 onMounted(() => {
   document.addEventListener('click', actions_clicked.documentClicked)
+  document.addEventListener('contextmenu', actions_clicked.documentClicked)
+  actions_clicked.setActionList()
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', actions_clicked.documentClicked)
+  document.removeEventListener('contextmenu', actions_clicked.documentClicked)
 })
 </script>
 
 <template>
-  <div class="action_menu_location" :style="{ 'left': actions_clicked.mouseX + 'px', 'top': actions_clicked.mouseY + 'px' }">
+  <div class="action_menu_location action_list" :style="{ 'left': actions_clicked.mouseX-19 + 'px', 'top': actions_clicked.mouseY+12 + 'px' }">
     <div :class="actions_clicked.actionsClicked ? 'action_menu' : 'action_menu_hidden'">
       <div class="menu-modal-inner">
         <div class="header-row">
@@ -27,11 +30,13 @@ onBeforeUnmount(() => {
 
         <div class="scrollable menu_dropdown">
           <div>
-            <div class="menu_dropdown"><a href="#">Resize</a></div>
-            <div class="menu_dropdown"><a href="#">Edit</a></div>
-            <div class="menu_dropdown"><a href="#">Copy</a></div>
-            <div class="menu_dropdown"><a href="#">Paste</a></div>
-            <div class="menu_dropdown"><a href="#">Delete</a></div>
+            <div class="menu_dropdown">
+              <span 
+              class="items"
+              v-for="listItem in actions_clicked.actionList.description" :key="listItem">
+                {{listItem}}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -49,6 +54,19 @@ onBeforeUnmount(() => {
   opacity: 0;
   visibility: hidden;
   margin-top: 4px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  padding: 2px;
+}
+
+.items:hover {
+  color: var(--text-hover);
 }
 
 .action_menu {
@@ -102,7 +120,7 @@ a:hover {
   background-color: var(--dark-grey);
   padding: 4px;
   top: -5.25px;
-  right: 16px;
+  left: 16px;
   border-top: 1px solid var(--border-color);
   border-left: 1px solid var(--border-color);
 }
