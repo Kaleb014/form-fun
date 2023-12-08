@@ -16,6 +16,8 @@ import TabToolsDropdownModal from '../components/Modals/TabToolsDropdownModal.vu
 import { useTabToolsStore } from '../stores/tabToolsClicked'
 import FormModalVue from '@/components/Modals/FormModal.vue'
 import ColumnsModals from '@/components/Modals/ColumnsModals.vue'
+import ActionsModal from '@/components/Modals/ActionsModal.vue'
+import { useActionStore } from '@/stores/actionsClicked'
 
 const add_clicked = useAddStore()
 const delete_clicked = useDeleteStore()
@@ -25,6 +27,7 @@ const edit_form_clicked = useEditFormStore()
 const menu_clicked = useMenuStore()
 const tab_tools_clicked = useTabToolsStore()
 const field_type = useFieldTypeStore()
+const actions_clicked = useActionStore()
 </script>
 
 <template>
@@ -59,4 +62,6 @@ const field_type = useFieldTypeStore()
   <WarningModal v-if="warning.warningModalActive" />
 
   <MenuDropdownModal v-if="menu_clicked.menuModalActive" />
+
+  <ActionsModal v-if="actions_clicked.actionsModalActive" />
 </template>

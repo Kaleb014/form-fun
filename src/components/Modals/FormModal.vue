@@ -6,10 +6,12 @@ import { useCopyStore } from '../../stores/copyClicked'
 import { useEditFormStore } from '../../stores/editForm'
 import { useToolTipsStore } from '../../stores/toolTipsStore'
 import { useFieldTypeStore } from '../../stores/FieldTypeStore'
-import { onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useGlobalFunctionStore } from '../../stores/globalFunctions'
 import _ellipses from '../../assets/3-vertical-dots-icon-export.png'
 import _ellipsesHover from '../../assets/ellipses-hover-export.png'
+import { useActionStore } from '@/stores/actionsClicked'
+import ActionsModal from '@/components/Modals/ActionsModal.vue'
 
 const tool_tips = useToolTipsStore()
 const edit = useEditFormStore()
@@ -17,6 +19,7 @@ const copy_clicked = useCopyStore()
 const add_clicked = useAddStore()
 const already_exists = useSaveStore()
 const field_type = useFieldTypeStore()
+const actions_clicked = useActionStore()
 const global = useGlobalFunctionStore()
 
 const _ellipsesImg = _ellipses
@@ -25,7 +28,21 @@ const _ellipsesImgHover = _ellipsesHover
 // TODO: Right-click commands - "Copy, edit, paste, delete, resize, on/off"
 // TODO: Currently, resizing text fields on dbl-click- update to a right-click menu option
 
+onMounted(() => {
+  document.addEventListener('mousedown', e => {
+    if(e.button == 2) {
+      console.log('right clicked');
+      actions_clicked.getMousePosition(e);
+    }
+  })
+})
+
 onUnmounted(() => {
+  document.removeEventListener('mousedown', event => {
+    if(event.button == 2) {
+      (e: any) => actions_clicked.getMousePosition(e)
+    }
+  })
   edit.resetState()
   console.log('calling reset')
 })
@@ -358,6 +375,7 @@ onUnmounted(() => {
                   class="field-value"
                   :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
+                  @click.right.prevent="actions_clicked.toggleModal()"
                   @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
                   >{{ field.value }}</textarea>
                 </div>
