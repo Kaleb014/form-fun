@@ -48,6 +48,11 @@ export const useGlobalFunctionStore = defineStore('globalFunctions', {
         '/' +
         new Date().getFullYear().toString()
       )
+    },
+
+    wrapper(arg: void) {
+      return function(){
+      }
     }
   }
 })

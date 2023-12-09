@@ -152,8 +152,10 @@ onUnmounted(() => {
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"
-            class="tab"
+            class="tab right_click_area"
             :class="{ 'selected-tab': index === edit.currentTab }"
+            oncontextmenu="return false"
+            @click.right="actions_clicked.getTabInfo('Tab', tab, index); actions_clicked.toggleModal(true)"
             @click="edit.tabClicked(edit.currentTab, (edit.currentTab = index))"
             type="button"
           >
@@ -334,8 +336,14 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+        <div name="fields" class="section right_click_area"
+          oncontextmenu="return false"
+          @click.right="actions_clicked.getSectionInfo('Section', section, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+          v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div class="column right_click_area" 
+            oncontextmenu="return false"
+            @click.right="actions_clicked.getColumnInfo('Column', column, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+            v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -346,8 +354,10 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
+                    oncontextmenu="return false"
+                    @click.right="actions_clicked.getFieldInfo('Field', 'Label', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.value }}
@@ -372,13 +382,12 @@ onUnmounted(() => {
                 </div>
                 <div class="field-value-row">
                   <textarea
-                  oncontextmenu="return false"
                   v-model="field.value"
-                  class="field-value action_list"
+                  class="field-value right_click_area"
                   :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
-                  @click.right="actions_clicked.getFieldInfo('field', 'text', index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
-                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
+                  oncontextmenu="return false"
+                  @click.right="actions_clicked.getFieldInfo('Field', 'Text', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -393,13 +402,16 @@ onUnmounted(() => {
                     name="selectable-field"
                     class="field-description selectable"
                     @click="edit.selectField(field)"
+                    
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}:
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <input type="text" class="field-value" v-model="field.value" />
+                  <input type="text" class="field-value  right_click_area" v-model="field.value"
+                  oncontextmenu="return false"
+                  @click.right="actions_clicked.getFieldInfo('Field', 'Number', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)" />
                 </div>
                 
               </div>
@@ -1208,8 +1220,12 @@ input[type="text"] {
   right: -4px;
 }
 
+.tab {
+  z-index: 0;
+}
 
 .section {
+  z-index: 1;
   display: flex;
   height: auto;
   min-height: 50%;
@@ -1219,6 +1235,7 @@ input[type="text"] {
 }
 
 .column {
+  z-index: 2;
   min-height: 100%;
   margin: 5px;
   width: 100%;
@@ -1274,6 +1291,7 @@ input[type="text"] {
 }
 
 .field-value {
+  z-index: 3;
   font-size: medium;
 }
 

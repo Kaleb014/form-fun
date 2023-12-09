@@ -6,13 +6,12 @@ const actions_clicked = useActionStore()
 
 onMounted(() => {
   document.addEventListener('click', actions_clicked.documentClicked)
-  document.addEventListener('contextmenu', actions_clicked.documentClicked)
-  actions_clicked.setActionList()
+  document.addEventListener('contextmenu', actions_clicked.documentRightClicked)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', actions_clicked.documentClicked)
-  document.removeEventListener('contextmenu', actions_clicked.documentClicked)
+  document.removeEventListener('contextmenu', actions_clicked.documentRightClicked)
 })
 </script>
 
@@ -21,7 +20,7 @@ onBeforeUnmount(() => {
     <div :class="actions_clicked.actionsClicked ? 'action_menu' : 'action_menu_hidden'">
       <div class="menu-modal-inner">
         <div class="header-row">
-          <div class="header-left menu_dropdown">Actions</div>
+          <div class="header-left menu_dropdown">{{ actions_clicked.objectType }} Actions</div>
 
           <div class="header-right menu_dropdown">
             <button type="button" class="exit-button">ⓧ</button>
@@ -33,7 +32,8 @@ onBeforeUnmount(() => {
             <div class="menu_dropdown">
               <span 
               class="items"
-              v-for="listItem in actions_clicked.actionList.description" :key="listItem">
+              v-for="(listItem, index) in actions_clicked.actionList.description" :key="index"
+              @click.left="actions_clicked.actionList.action[index]">
                 {{listItem}}
               </span>
             </div>

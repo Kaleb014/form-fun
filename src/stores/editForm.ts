@@ -483,9 +483,6 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         isOn: _currentField.isOn,
       }
 
-      const doc = document.getElementById('textarea') as HTMLInputElement
-      doc.style.width
-
       switch(_type) {
         case 'label':
           const _label = document.getElementById('label') as HTMLInputElement
