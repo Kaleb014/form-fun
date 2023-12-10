@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { useEditFormStore } from './editForm'
 import { ref } from 'vue'
+import { useFieldTypeStore } from './FieldTypeStore'
+import { useWarningStore } from './warningStore'
 
 export const useActionStore = defineStore('actionClicked', {
   state: () => {
@@ -129,6 +131,7 @@ export const useActionStore = defineStore('actionClicked', {
     },
     setActionList() {
       const edit = useEditFormStore()
+      const field_type = useFieldTypeStore()
       switch (this.objectType) {
         case 'Tab':
           this.actionList.description = [
@@ -141,18 +144,30 @@ export const useActionStore = defineStore('actionClicked', {
         case 'Section':
           this.actionList.description = [
             'Select All',
+            'Deselect All',
             'Copy',
-            'Edit',
+            'Paste',
             'Delete'
           ]
+          this.actionList.action.push(() => { this.selectAllFields() })
+          this.actionList.action.push(() => { this.deselectAllFields() })
+          this.actionList.action.push(() => { this.copyColumn() })
+          this.actionList.action.push(() => { this.pasteObject('column') })
+          this.actionList.action.push(() => { this.deleteColumn() })
           break
         case 'Column':
           this.actionList.description = [
             'Select All',
+            'Deselect All',
             'Copy',
-            'Edit',
+            'Paste',
             'Delete'
           ]
+          this.actionList.action.push(() => { this.selectAllFields() })
+          this.actionList.action.push(() => { this.deselectAllFields() })
+          this.actionList.action.push(() => { this.copyColumn() })
+          this.actionList.action.push(() => { this.pasteObject('field') })
+          this.actionList.action.push(() => { this.deleteColumn() })
           break
         case 'Field':
           switch (this.fieldType) {
@@ -232,7 +247,8 @@ export const useActionStore = defineStore('actionClicked', {
       edit.editField(false)
     },
     copyField() {
-      console.log("Copy field")
+      const edit = useEditFormStore()
+      sessionStorage.setItem('field', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex]))
     },
     deleteField() {
       const edit = useEditFormStore()
@@ -242,6 +258,60 @@ export const useActionStore = defineStore('actionClicked', {
     toggleField() {
       const edit = useEditFormStore()
       edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex].isOn = !edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex].isOn
-    }
+    },
+    pasteObject(_objectType: string) {
+      const edit = useEditFormStore()
+      const warningStore = useWarningStore()
+      const _value = sessionStorage.getItem(_objectType)
+      if(_value === null || _value === undefined) {
+        return
+      } else {
+        const _pasteValue = JSON.parse(_value)
+        switch(_objectType){
+          case 'tab':
+            edit.form.tabs.push(_pasteValue)
+          break
+          case 'section':
+            edit.form.tabs[this.tabIndex].sections.push(_pasteValue)
+          break
+          case 'column':
+            if(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.length < 4) {
+              edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.push(_pasteValue)
+            } else {
+              warningStore.toggleWarningModal()
+              warningStore.header = 'Select a different section or create a new section for additional columns and fields.'
+              warningStore.message = 'Cannot have more than 4 columns per section.'
+            }
+          break
+          case 'field':
+            edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields.push(_pasteValue)
+          break
+          default:
+          break
+        }
+      }
+    },
+    selectAllFields() {
+      const edit = useEditFormStore()
+      const _fields = edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields
+      for(let i = 0; i < _fields.length; i++) {
+        _fields[i].isSelected = true
+      }
+    },
+    deselectAllFields() {
+      const edit = useEditFormStore()
+      const _fields = edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields
+      for(let i = 0; i < _fields.length; i++) {
+        _fields[i].isSelected = false
+      }
+    },
+    copyColumn() {
+      const edit = useEditFormStore()
+      sessionStorage.setItem('column', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex]))
+    },
+    deleteColumn() {
+      const edit = useEditFormStore()
+      edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.splice(this.columnIndex,1)
+    },
   }
 })
