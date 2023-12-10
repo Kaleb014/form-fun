@@ -6,12 +6,11 @@ import { useCopyStore } from '../../stores/copyClicked'
 import { useEditFormStore } from '../../stores/editForm'
 import { useToolTipsStore } from '../../stores/toolTipsStore'
 import { useFieldTypeStore } from '../../stores/FieldTypeStore'
-import { onMounted, onUnmounted } from 'vue'
+import { onUnmounted } from 'vue'
 import { useGlobalFunctionStore } from '../../stores/globalFunctions'
 import _ellipses from '../../assets/3-vertical-dots-icon-export.png'
 import _ellipsesHover from '../../assets/ellipses-hover-export.png'
 import { useActionStore } from '@/stores/actionsClicked'
-import ActionsModal from '@/components/Modals/ActionsModal.vue'
 
 const tool_tips = useToolTipsStore()
 const edit = useEditFormStore()
@@ -25,25 +24,7 @@ const global = useGlobalFunctionStore()
 const _ellipsesImg = _ellipses
 const _ellipsesImgHover = _ellipsesHover
 
-// TODO: Right-click commands - "Copy, edit, paste, delete, resize, on/off"
-// TODO: Currently, resizing text fields on dbl-click- update to a right-click menu option
-
-onMounted(() => {
-  document.addEventListener('contextmenu', e => {
-    if(e.button == 2) {
-      console.log('right clicked');
-      actions_clicked.getMousePosition(e);
-    }
-  })
-})
-
 onUnmounted(() => {
-  document.removeEventListener('contextmenu', e => {
-    if(e.button == 2) {
-      console.log('right clicked');
-      actions_clicked.getMousePosition(e);
-    }
-  })
   edit.resetState()
   console.log('calling reset')
 })
@@ -155,7 +136,9 @@ onUnmounted(() => {
             class="tab right_click_area"
             :class="{ 'selected-tab': index === edit.currentTab }"
             oncontextmenu="return false"
-            @click.right="actions_clicked.getTabInfo('Tab', tab, index); actions_clicked.toggleModal(true)"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+            null, null, edit.form.tabs[edit.currentTab], -1, '',
+            -1, -1, edit.currentTab)}"
             @click="edit.tabClicked(edit.currentTab, (edit.currentTab = index))"
             type="button"
           >
@@ -338,11 +321,15 @@ onUnmounted(() => {
       <div class="scrollable">
         <div name="fields" class="section right_click_area"
           oncontextmenu="return false"
-          @click.right="actions_clicked.getSectionInfo('Section', section, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
+          null, section, edit.form.tabs[edit.currentTab], -1, '',
+          -1, sectionIndex, edit.currentTab)}"
           v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
           <div class="column right_click_area" 
             oncontextmenu="return false"
-            @click.right="actions_clicked.getColumnInfo('Column', column, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Column', null, 
+            column, section, edit.form.tabs[edit.currentTab], -1, '',
+            columnIndex, sectionIndex, edit.currentTab)}"
             v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
@@ -357,7 +344,9 @@ onUnmounted(() => {
                     class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
                     oncontextmenu="return false"
-                    @click.right="actions_clicked.getFieldInfo('Field', 'Label', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Label',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.value }}
@@ -387,7 +376,9 @@ onUnmounted(() => {
                   :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
                   oncontextmenu="return false"
-                  @click.right="actions_clicked.getFieldInfo('Field', 'Text', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)"
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                  columnIndex, sectionIndex, edit.currentTab)}"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -411,7 +402,10 @@ onUnmounted(() => {
                 <div class="field-value-row">
                   <input type="text" class="field-value  right_click_area" v-model="field.value"
                   oncontextmenu="return false"
-                  @click.right="actions_clicked.getFieldInfo('Field', 'Number', field, index, columnIndex, sectionIndex, edit.currentTab); actions_clicked.toggleModal(true)" />
+                  
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                  columnIndex, sectionIndex, edit.currentTab)}" />
                 </div>
                 
               </div>
@@ -536,8 +530,12 @@ onUnmounted(() => {
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"
-            class="tab"
+            class="tab right_click_area"
             :class="{ 'selected-tab': index === edit.currentTab }"
+            oncontextmenu="return false"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+            null, null, edit.form.tabs[edit.currentTab], -1, '',
+            -1, -1, edit.currentTab)}"
             @click="edit.tabClicked(edit.currentTab, (edit.currentTab = index))"
             type="button"
           >
@@ -696,8 +694,18 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+        <div name="fields" class="section right_click_area"
+          oncontextmenu="return false"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
+          null, section, edit.form.tabs[edit.currentTab], -1, '',
+          -1, sectionIndex, edit.currentTab)}"
+          v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div class="column right_click_area" 
+            oncontextmenu="return false"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Column', null, 
+            column, section, edit.form.tabs[edit.currentTab], -1, '',
+            columnIndex, sectionIndex, edit.currentTab)}"
+            v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -708,8 +716,12 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Label',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.value }}
@@ -735,10 +747,13 @@ onUnmounted(() => {
                 <div class="field-value-row">
                   <textarea
                   v-model="field.value"
-                  class="field-value"
-                  :style="{ 'width': field.width + 'px', 'height': field.height + 'px', 'resize': field.isResizable ? 'both' : 'none' }"
+                  class="field-value right_click_area"
+                  :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
-                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
+                  oncontextmenu="return false"
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                  columnIndex, sectionIndex, edit.currentTab)}"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -759,7 +774,11 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <input type="text" class="field-value" v-model="field.value" />
+                  <input type="text" class="field-value  right_click_area" v-model="field.value"
+                  oncontextmenu="return false"
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                  columnIndex, sectionIndex, edit.currentTab)}" />
                 </div>
                 
               </div>
@@ -884,8 +903,12 @@ onUnmounted(() => {
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"
-            class="tab"
+            class="tab right_click_area"
             :class="{ 'selected-tab': index === edit.currentTab }"
+            oncontextmenu="return false"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+            null, null, edit.form.tabs[edit.currentTab], -1, '',
+            -1, -1, edit.currentTab)}"
             @click="edit.tabClicked(edit.currentTab, (edit.currentTab = index))"
             type="button"
           >
@@ -1043,8 +1066,18 @@ onUnmounted(() => {
       </div>
 
       <div class="scrollable">
-        <div name="fields" class="section" v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
-          <div class="column" v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
+        <div name="fields" class="section right_click_area"
+          oncontextmenu="return false"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
+          null, section, edit.form.tabs[edit.currentTab], -1, '',
+          -1, sectionIndex, edit.currentTab)}"
+          v-for="(section, sectionIndex) in edit.form.tabs[edit.currentTab].sections" :key="sectionIndex">
+          <div class="column right_click_area" 
+            oncontextmenu="return false"
+            @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Column', null, 
+            column, section, edit.form.tabs[edit.currentTab], -1, '',
+            columnIndex, sectionIndex, edit.currentTab)}"
+            v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
               <div v-if="field.type === 'label'" :class="field.alignment">
@@ -1055,8 +1088,12 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Label',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.value }}
@@ -1082,10 +1119,13 @@ onUnmounted(() => {
                 <div class="field-value-row">
                   <textarea
                   v-model="field.value"
-                  class="field-value"
-                  :style="{ 'width': field.width + 'px', 'height': field.height + 'px', 'resize': field.isResizable ? 'both' : 'none' }"
+                  class="field-value right_click_area"
+                  :style="{ 'width': field.width, 'height': field.height, 'resize': field.isResizable ? 'both' : 'none' }"
                   :name="field.isResizable ? 'resizeTextArea' : 'textArea'"
-                  @dblclick="edit.saveFieldDimensions(field, index, sectionIndex, columnIndex)"
+                  oncontextmenu="return false"
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                  columnIndex, sectionIndex, edit.currentTab)}"
                   >{{ field.value }}</textarea>
                 </div>
               </div>
@@ -1100,17 +1140,23 @@ onUnmounted(() => {
                     name="selectable-field"
                     class="field-description selectable"
                     @click="edit.selectField(field)"
+                    
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}:
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <input type="text" class="field-value" v-model="field.value" />
+                  <input type="text" class="field-value  right_click_area" v-model="field.value"
+                  oncontextmenu="return false"
+                  
+                  @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                  column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                  columnIndex, sectionIndex, edit.currentTab)}" />
                 </div>
                 
               </div>
-              
+
             </div>
           </div>
         </div>
@@ -1133,9 +1179,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/*
- style="background-color: var(--middle-grey);"
-*/
 .middle-grey {
   background-color: var(--middle-grey);
 }

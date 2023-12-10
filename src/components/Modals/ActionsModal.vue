@@ -20,7 +20,7 @@ onBeforeUnmount(() => {
     <div :class="actions_clicked.actionsClicked ? 'action_menu' : 'action_menu_hidden'">
       <div class="menu-modal-inner">
         <div class="header-row">
-          <div class="header-left menu_dropdown">{{ actions_clicked.objectType }} Actions</div>
+          <div class="header-left menu_dropdown">{{ actions_clicked.objectType }}</div>
 
           <div class="header-right menu_dropdown">
             <button type="button" class="exit-button">ⓧ</button>
@@ -31,9 +31,9 @@ onBeforeUnmount(() => {
           <div>
             <div class="menu_dropdown">
               <span 
-              class="items"
-              v-for="(listItem, index) in actions_clicked.actionList.description" :key="index"
-              @click.left="actions_clicked.actionList.action[index]">
+                class="items"
+                v-for="(listItem, index) in actions_clicked.actionList.description" :key="index"
+                @click.left="actions_clicked.actionList.action[index]">
                 {{listItem}}
               </span>
             </div>
@@ -45,9 +45,31 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.scrollable {
+  padding: 5px;
+  padding-left: 10px;
+}
+
+.header-left {
+  width: 50%;
+  display: block;
+  justify-content: left;
+  padding-right: 10px;
+}
+
+.header-right {
+  width: 50%;
+  display: block;
+  justify-content: right;
+  text-align: right;
+  font-size: small;
+}
+
 .action_menu_location {
   position: absolute;
-  width: 125px;
+  width: fit-content;
+  min-width: 125px;
+  font-size: small;
 }
 .action_menu_hidden {
   transition: all 0.5s ease-in-out;
@@ -62,7 +84,6 @@ onBeforeUnmount(() => {
   cursor: pointer;
   width: fit-content;
   height: fit-content;
-  padding: 2px;
 }
 
 .items:hover {

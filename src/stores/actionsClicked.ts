@@ -27,6 +27,31 @@ export const useActionStore = defineStore('actionClicked', {
     }
   },
   actions: {
+    rightClickManager(e: any, _objectType: string, _field: any, _column: any,
+      _section: any, _tab: any, _fieldIndex: number, _fieldType: string, 
+      _columnIndex: number, _sectionIndex: number, _tabIndex: number) {
+
+      this.getMousePosition(e)
+      switch(_objectType) {
+        case 'Tab':
+          this.getTabInfo(_objectType, _tab, _tabIndex)
+          this.toggleModal(true)
+        break
+        case 'Section':
+          this.getSectionInfo(_objectType, _section, _sectionIndex, _tabIndex)
+          this.toggleModal(true)
+        break
+        case 'Column':
+          this.getColumnInfo(_objectType, _column, _columnIndex, _sectionIndex, _tabIndex)
+          this.toggleModal(true)
+        break
+        case 'Field':
+          this.getFieldInfo(_objectType, _fieldType, _field, _fieldIndex, _columnIndex,
+            _sectionIndex, _tabIndex)
+          this.toggleModal(true)
+        break
+      }
+    },
     documentClicked(e: any) {
       if (!e.target.matches('.action_list')) {
         this.toggleModal(false)
