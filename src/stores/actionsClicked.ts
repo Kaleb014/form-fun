@@ -35,23 +35,29 @@ export const useActionStore = defineStore('actionClicked', {
 
       this.getMousePosition(e)
       switch(_objectType) {
+        case 'Form':
+          this.getFormInfo(_objectType)
+          this.toggleModal(true)
+          break
         case 'Tab':
           this.getTabInfo(_objectType, _tab, _tabIndex)
           this.toggleModal(true)
-        break
+          break
         case 'Section':
           this.getSectionInfo(_objectType, _section, _sectionIndex, _tabIndex)
           this.toggleModal(true)
-        break
+          break
         case 'Column':
           this.getColumnInfo(_objectType, _column, _columnIndex, _sectionIndex, _tabIndex)
           this.toggleModal(true)
-        break
+          break
         case 'Field':
           this.getFieldInfo(_objectType, _fieldType, _field, _fieldIndex, _columnIndex,
             _sectionIndex, _tabIndex)
           this.toggleModal(true)
-        break
+          break
+        default:
+          return
       }
     },
     documentClicked(e: any) {
@@ -83,6 +89,14 @@ export const useActionStore = defineStore('actionClicked', {
           console.log('modal on')
         }, 100)
       }
+    },
+    getFormInfo(_objectType: string) {
+      this.objectType = _objectType
+      this.actionList = {
+        description: [] as Array<string>,
+        action: [] as Array<VoidFunction>
+      } as any
+      this.setActionList()
     },
     getTabInfo(_objectType: string, _tab: any, _tabIndex: number){
       this.objectType = _objectType
@@ -131,15 +145,30 @@ export const useActionStore = defineStore('actionClicked', {
     },
     setActionList() {
       const edit = useEditFormStore()
-      const field_type = useFieldTypeStore()
+
       switch (this.objectType) {
+        case 'Form':
+          this.actionList.description = [
+            'Paste'
+          ]
+          this.actionList.action.push(() => { this.pasteObject('Tab') })
+          break
         case 'Tab':
           this.actionList.description = [
             'Select All',
+            'Deselect All',
             'Copy',
             'Edit',
+            'Paste',
             'Delete'
           ]
+          const field_type = useFieldTypeStore()
+          this.actionList.action.push(() => { this.selectAllFields() })
+          this.actionList.action.push(() => { this.deselectAllFields() })
+          this.actionList.action.push(() => { this.copyObject() })
+          this.actionList.action.push(() => { this.editObject() })
+          this.actionList.action.push(() => { this.pasteObject('Section') })
+          this.actionList.action.push(() => { this.deleteObject() })
           break
         case 'Section':
           this.actionList.description = [
@@ -151,9 +180,9 @@ export const useActionStore = defineStore('actionClicked', {
           ]
           this.actionList.action.push(() => { this.selectAllFields() })
           this.actionList.action.push(() => { this.deselectAllFields() })
-          this.actionList.action.push(() => { this.copyColumn() })
-          this.actionList.action.push(() => { this.pasteObject('column') })
-          this.actionList.action.push(() => { this.deleteColumn() })
+          this.actionList.action.push(() => { this.copyObject() })
+          this.actionList.action.push(() => { this.pasteObject('Column') })
+          this.actionList.action.push(() => { this.deleteObject() })
           break
         case 'Column':
           this.actionList.description = [
@@ -165,9 +194,9 @@ export const useActionStore = defineStore('actionClicked', {
           ]
           this.actionList.action.push(() => { this.selectAllFields() })
           this.actionList.action.push(() => { this.deselectAllFields() })
-          this.actionList.action.push(() => { this.copyColumn() })
-          this.actionList.action.push(() => { this.pasteObject('field') })
-          this.actionList.action.push(() => { this.deleteColumn() })
+          this.actionList.action.push(() => { this.copyObject() })
+          this.actionList.action.push(() => { this.pasteObject('Field') })
+          this.actionList.action.push(() => { this.deleteObject() })
           break
         case 'Field':
           switch (this.fieldType) {
@@ -178,9 +207,9 @@ export const useActionStore = defineStore('actionClicked', {
                 'Delete',
                 'On/Off'
               ]
-              this.actionList.action.push(() => { this.editField() })
-              this.actionList.action.push(() => { this.copyField() })
-              this.actionList.action.push(() => { this.deleteField() })
+              this.actionList.action.push(() => { this.editObject() })
+              this.actionList.action.push(() => { this.copyObject() })
+              this.actionList.action.push(() => { this.deleteObject() })
               this.actionList.action.push(() => { this.toggleField() })
               break
             case 'Text':
@@ -192,9 +221,9 @@ export const useActionStore = defineStore('actionClicked', {
                 'On/Off'
               ]
               this.actionList.action.push(() => { edit.saveFieldDimensions(this.field, this.fieldIndex, this.sectionIndex, this.columnIndex) })
-              this.actionList.action.push(() => { this.editField() })
-              this.actionList.action.push(() => { this.copyField() })
-              this.actionList.action.push(() => { this.deleteField() })
+              this.actionList.action.push(() => { this.editObject() })
+              this.actionList.action.push(() => { this.copyObject() })
+              this.actionList.action.push(() => { this.deleteObject() })
               this.actionList.action.push(() => { this.toggleField() })
               break
             case 'Number':
@@ -204,9 +233,9 @@ export const useActionStore = defineStore('actionClicked', {
                 'Delete',
                 'On/Off'
               ]
-              this.actionList.action.push(() => { this.editField() })
-              this.actionList.action.push(() => { this.copyField() })
-              this.actionList.action.push(() => { this.deleteField() })
+              this.actionList.action.push(() => { this.editObject() })
+              this.actionList.action.push(() => { this.copyObject() })
+              this.actionList.action.push(() => { this.deleteObject() })
               this.actionList.action.push(() => { this.toggleField() })
               break
             case 'Formula':
@@ -216,9 +245,9 @@ export const useActionStore = defineStore('actionClicked', {
                 'Delete',
                 'On/Off'
               ]
-              this.actionList.action.push(() => { this.editField() })
-              this.actionList.action.push(() => { this.copyField() })
-              this.actionList.action.push(() => { this.deleteField() })
+              this.actionList.action.push(() => { this.editObject() })
+              this.actionList.action.push(() => { this.copyObject() })
+              this.actionList.action.push(() => { this.deleteObject() })
               this.actionList.action.push(() => { this.toggleField() })
               break
             case 'Item':
@@ -228,9 +257,9 @@ export const useActionStore = defineStore('actionClicked', {
                 'Delete',
                 'On/Off'
               ]
-              this.actionList.action.push(() => { this.editField() })
-              this.actionList.action.push(() => { this.copyField() })
-              this.actionList.action.push(() => { this.deleteField() })
+              this.actionList.action.push(() => { this.editObject() })
+              this.actionList.action.push(() => { this.copyObject() })
+              this.actionList.action.push(() => { this.deleteObject() })
               this.actionList.action.push(() => { this.toggleField() })
               break
             default:
@@ -241,19 +270,31 @@ export const useActionStore = defineStore('actionClicked', {
           break
       }
     },
-    editField() {
+    deleteObject() {
       const edit = useEditFormStore()
-      edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex].isSelected = true
-      edit.editField(false)
-    },
-    copyField() {
-      const edit = useEditFormStore()
-      sessionStorage.setItem('field', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex]))
-    },
-    deleteField() {
-      const edit = useEditFormStore()
-      edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex].isSelected = true
-      edit.deleteField()
+      const warningStore = useWarningStore()
+      switch(this.objectType){
+        case 'Tab':
+          if(edit.form.tabs.length === 1) {
+            warningStore.toggleWarningModal()
+            warningStore.header = 'You cannot have zero tabs, create a new tab before deleting this one.'
+            warningStore.message = 'You need at least one tab!'
+          } else {
+            edit.form.tabs.splice(this.tabIndex,1)
+          }
+          break
+        case 'Section':
+          edit.form.tabs[this.tabIndex].sections.splice(this.sectionIndex,1)
+          break
+        case 'Column':
+          edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.splice(this.columnIndex,1)
+          break
+        case 'Field':
+          edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields.splice(this.fieldIndex,1)
+          break
+        default:
+          break
+      }
     },
     toggleField() {
       const edit = useEditFormStore()
@@ -268,13 +309,13 @@ export const useActionStore = defineStore('actionClicked', {
       } else {
         const _pasteValue = JSON.parse(_value)
         switch(_objectType){
-          case 'tab':
+          case 'Tab':
             edit.form.tabs.push(_pasteValue)
-          break
-          case 'section':
+            break
+          case 'Section':
             edit.form.tabs[this.tabIndex].sections.push(_pasteValue)
-          break
-          case 'column':
+            break
+          case 'Column':
             if(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.length < 4) {
               edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.push(_pasteValue)
             } else {
@@ -282,10 +323,10 @@ export const useActionStore = defineStore('actionClicked', {
               warningStore.header = 'Select a different section or create a new section for additional columns and fields.'
               warningStore.message = 'Cannot have more than 4 columns per section.'
             }
-          break
-          case 'field':
+            break
+          case 'Field':
             edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields.push(_pasteValue)
-          break
+            break
           default:
           break
         }
@@ -294,24 +335,98 @@ export const useActionStore = defineStore('actionClicked', {
     selectAllFields() {
       const edit = useEditFormStore()
       const _fields = edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields
-      for(let i = 0; i < _fields.length; i++) {
-        _fields[i].isSelected = true
+
+      switch(this.objectType){
+        case 'Tab':
+          for(let i = 0; i < edit.form.tabs[this.tabIndex].sections.length; i++) {
+            for(let j = 0; j < edit.form.tabs[this.tabIndex].sections[i].columns.length; j++) {
+              for(let k = 0; k < edit.form.tabs[this.tabIndex].sections[i].columns[j].fields.length; k++) {
+                edit.form.tabs[this.tabIndex].sections[i].columns[j].fields[k].isSelected = true
+              }
+            }
+          }
+          break
+        case 'Section':
+          for(let i = 0; i < edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.length; i++) {
+            for(let j = 0; j < edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[i].fields.length; j++) {
+              edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[i].fields[j].isSelected = true
+            }
+          }
+          break
+        case 'Column':
+          for(let i = 0; i < _fields.length; i++) {
+            _fields[i].isSelected = true
+          }
+          break
+        default:
+          break
       }
     },
     deselectAllFields() {
       const edit = useEditFormStore()
       const _fields = edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields
-      for(let i = 0; i < _fields.length; i++) {
-        _fields[i].isSelected = false
+
+      switch(this.objectType){
+        case 'Tab':
+          for(let i = 0; i < edit.form.tabs[this.tabIndex].sections.length; i++) {
+            for(let j = 0; j < edit.form.tabs[this.tabIndex].sections[i].columns.length; j++) {
+              for(let k = 0; k < edit.form.tabs[this.tabIndex].sections[i].columns[j].fields.length; k++) {
+                edit.form.tabs[this.tabIndex].sections[i].columns[j].fields[k].isSelected = false
+              }
+            }
+          }
+          break
+        case 'Section':
+          for(let i = 0; i < edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.length; i++) {
+            for(let j = 0; j < edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[i].fields.length; j++) {
+              edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[i].fields[j].isSelected = false
+            }
+          }
+          break
+        case 'Column':
+          for(let i = 0; i < _fields.length; i++) {
+            _fields[i].isSelected = false
+          }
+          break
+        default:
+          break
       }
     },
-    copyColumn() {
+    copyObject() {
       const edit = useEditFormStore()
-      sessionStorage.setItem('column', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex]))
+      switch(this.objectType){
+        case 'Tab':
+          sessionStorage.setItem('Tab', JSON.stringify(edit.form.tabs[this.tabIndex]))
+          break
+        case 'Section':
+          sessionStorage.setItem('Section', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex]))
+          break
+        case 'Column':
+          sessionStorage.setItem('Column', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex]))
+          break
+        case 'Field':
+          sessionStorage.setItem('Field', JSON.stringify(edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex]))
+          break
+        default:
+          break
+      }
     },
-    deleteColumn() {
+    editObject() {
       const edit = useEditFormStore()
-      edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns.splice(this.columnIndex,1)
-    },
+
+      switch(this.objectType) {
+        case 'Tab':
+          const field_type = useFieldTypeStore()
+          field_type.tabIndex = this.tabIndex; 
+          field_type.toggleEditTabModal()
+          break
+        case 'Field':
+          edit.form.tabs[this.tabIndex].sections[this.sectionIndex].columns[this.columnIndex].fields[this.fieldIndex].isSelected = true
+          edit.editField(false)
+          break
+        default:
+          return
+      }
+    }
   }
 })

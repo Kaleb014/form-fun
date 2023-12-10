@@ -10,7 +10,8 @@ export const useFieldTypeStore = defineStore('fieldTypeStore', {
       deleteTabModalActive: false,
       deleteSectionModalActive: false,
       addColumnModalActive: false,
-      deleteColumnModalActive: false
+      deleteColumnModalActive: false,
+      tabIndex: -1
     }
   },
   actions: {

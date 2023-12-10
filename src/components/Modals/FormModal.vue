@@ -43,7 +43,10 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div name="description-row" class="permanent-row">
+      <div name="description-row" class="permanent-row right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+        null, null, edit.form, -1, '', -1, -1, -1)}">
         <div class="permanent-left">
           <div class="row">
             <span> Description </span>
@@ -72,7 +75,7 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleEditTabModal()"
+                  @click="field_type.tabIndex = edit.currentTab; field_type.toggleEditTabModal()"
                 >
                   <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
@@ -129,7 +132,10 @@ onUnmounted(() => {
             <img width="8" height="12" src="../../assets/arrow-left-icon-export.png" />
           </button>
         </div>
-        <div class="tab-left" id="tab-left">
+        <div class="tab-left right_click_area" id="tab-left"
+          oncontextmenu="return false"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+          null, null, edit.form, -1, '', -1, -1, -1)}">
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"
@@ -137,8 +143,8 @@ onUnmounted(() => {
             :class="{ 'selected-tab': index === edit.currentTab }"
             oncontextmenu="return false"
             @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
-            null, null, edit.form.tabs[edit.currentTab], -1, '',
-            -1, -1, edit.currentTab)}"
+            null, null, edit.form.tabs[index], -1, '',
+            -1, -1, index)}"
             @click="edit.tabClicked(edit.currentTab, (edit.currentTab = index))"
             type="button"
           >
@@ -440,12 +446,15 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div name="description-row" class="permanent-row">
+      <div name="description-row" class="permanent-row right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+        null, null, edit.form, -1, '', -1, -1, -1)}">
         <div class="permanent-left">
           <div class="row">
             <span> Description </span>
             <div class="row-inner">
-              <input type="text" placeholder="Form Description..." v-model="edit.form.content" />
+              <input type="text" placeholder=" Form Description..." v-model="edit.form.content" />
             </div>
           </div>
         </div>
@@ -469,7 +478,7 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleEditTabModal()"
+                  @click="field_type.tabIndex = edit.currentTab; field_type.toggleEditTabModal()"
                 >
                   <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
@@ -526,7 +535,10 @@ onUnmounted(() => {
             <img width="8" height="12" src="../../assets/arrow-left-icon-export.png" />
           </button>
         </div>
-        <div class="tab-left" id="tab-left">
+        <div class="tab-left right_click_area" id="tab-left"
+          oncontextmenu="return false"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+          null, null, edit.form, -1, '', -1, -1, -1)}">
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"
@@ -813,12 +825,15 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div name="description-row" class="permanent-row">
+      <div name="description-row" class="permanent-row right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+        null, null, edit.form, -1, '', -1, -1, -1)}">
         <div class="permanent-left">
           <div class="row">
             <span> Description </span>
             <div class="row-inner">
-              <input type="text" placeholder="Form Description..." v-model="edit.form.content" />
+              <input type="text" placeholder=" Form Description..." v-model="edit.form.content" />
             </div>
           </div>
         </div>
@@ -842,7 +857,7 @@ onUnmounted(() => {
                 <button
                   class="command-button tooltip"
                   type="button"
-                  @click="field_type.toggleEditTabModal()"
+                  @click="field_type.tabIndex = edit.currentTab; field_type.toggleEditTabModal()"
                 >
                   <img src="../../assets/edit-round-line-icon-export.png" width="22" height="22" />
                   <div class="tooltip-container">
@@ -899,7 +914,10 @@ onUnmounted(() => {
             <img width="8" height="12" src="../../assets/arrow-left-icon-export.png" />
           </button>
         </div>
-        <div class="tab-left" id="tab-left">
+        <div class="tab-left right_click_area" id="tab-left"
+          oncontextmenu="return false"
+          @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Form', null, 
+          null, null, edit.form, -1, '', -1, -1, -1)}">
           <button
             v-for="(tab, index) in edit.form.tabs"
             :key="index"

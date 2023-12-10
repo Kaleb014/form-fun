@@ -296,7 +296,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
     editTab() {
       const _name = document.getElementById('tab-name') as HTMLInputElement
       const field_type = useFieldTypeStore()
-      this.form.tabs[this.currentTab].name = _name.value
+      this.form.tabs[field_type.tabIndex].name = _name.value
       field_type.toggleEditTabModal()
     },
     deleteTab() {

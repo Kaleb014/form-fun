@@ -45,7 +45,7 @@ const edit = useEditFormStore()
     <div class="modal">
       <div class="modal-inner modal-width-override">
         <div class="header-row">
-          <div class="header-left">Edit Tab: {{ edit.form.tabs[edit.currentTab].name }}</div>
+          <div class="header-left">Edit Tab: {{ edit.form.tabs[field_type.tabIndex].name }}</div>
 
           <div class="header-right">
             <button type="button" class="exit-button" @click="field_type.toggleEditTabModal()">
@@ -58,7 +58,7 @@ const edit = useEditFormStore()
           <div class="row">
             <div class="row-inner">
               <span>Tab Name : </span>
-              <input id="tab-name" type="text" :value="edit.form.tabs[edit.currentTab].name" />
+              <input id="tab-name" type="text" :value="edit.form.tabs[field_type.tabIndex].name" />
             </div>
           </div>
         </div>
