@@ -130,7 +130,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="label" type="text" placeholder=" Value..." />
+              <input id="Label" type="text" placeholder=" Value..." />
+              <input id="code" type="text" placeholder=" Code..." />
             </div>
           </div>
         </div>
@@ -138,7 +139,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="edit.saveNewField('Label'); field_type.toggleAddModal()">Save</button>
               <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -162,7 +163,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="text" type="text" placeholder=" Value..." />
+              <input id="Text" type="text" placeholder=" Value..." />
+              <input id="code" type="text" placeholder=" Code..." />
             </div>
           </div>
         </div>
@@ -170,7 +172,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="edit.saveNewField('Text'); field_type.toggleAddModal()">Save</button>
               <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -193,7 +195,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="number" type="text" placeholder=" Value..." />
+              <input id="Number" type="text" placeholder=" Value..." />
+              <input id="code" type="text" placeholder=" Code..." />
             </div>
           </div>
         </div>
@@ -201,7 +204,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="edit.saveNewField('Number'); field_type.toggleAddModal()">Save</button>
               <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -225,7 +228,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="item" type="text" placeholder=" Value..." />
+              <input id="Item" type="text" placeholder=" Value..." />
+              <input id="code" type="text" placeholder=" Code..." />
             </div>
           </div>
         </div>
@@ -233,7 +237,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="edit.saveNewField('Item'); field_type.toggleAddModal()">Save</button>
               <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -257,7 +261,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." />
-              <input id="formula" type="text" placeholder=" Value..." />
+              <input id="Formula" type="text" placeholder=" Value..." />
+              <input id="code" type="text" placeholder=" Code..." />
             </div>
           </div>
         </div>
@@ -265,7 +270,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveNewField(); field_type.toggleAddModal()">Save</button>
+              <button type="button" @click="edit.saveNewField('Formula'); field_type.toggleAddModal()">Save</button>
               <button type="button" @click="field_type.toggleAddModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -388,7 +393,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="label" type="text" placeholder=" Value..." :value="currentField.value"/>
+              <input id="Label" type="text" placeholder=" Value..." :value="currentField.value"/>
+              <input id="code" type="text" placeholder=" Code..." :value="currentField.code" />
             </div>
           </div>
         </div>
@@ -396,7 +402,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField('label');">Save</button>
+              <button type="button" @click="edit.saveEditedField('Label')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -419,7 +425,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="text" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="Text" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="code" type="text" placeholder=" Code..." :value="currentField.code" />
             </div>
           </div>
         </div>
@@ -427,7 +434,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField('text')">Save</button>
+              <button type="button" @click="edit.saveEditedField('Text')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -450,7 +457,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="number" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="Number" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="code" type="text" placeholder=" Code..." :value="currentField.code" />
             </div>
           </div>
         </div>
@@ -458,7 +466,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField('number')">Save</button>
+              <button type="button" @click="edit.saveEditedField('Number')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -481,7 +489,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="item" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="Item" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="code" type="text" placeholder=" Code..." :value="currentField.code" />
             </div>
           </div>
         </div>
@@ -489,7 +498,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField('item')">Save</button>
+              <button type="button" @click="edit.saveEditedField('Item')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>
@@ -512,7 +521,8 @@ onUnmounted(() => {
           <div class="row">
             <div class="row-inner-override">
               <input id="description" type="text" placeholder=" Description..." :value="currentField.description"/>
-              <input id="formula" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="Formula" type="text" placeholder=" Value..." :value="currentField.value" />
+              <input id="code" type="text" placeholder=" Code..." :value="currentField.code" />
             </div>
           </div>
         </div>
@@ -520,7 +530,7 @@ onUnmounted(() => {
         <div class="button-container">
           <div class="small-body-button">
             <div class="modal_lower_button">
-              <button type="button" @click="edit.saveEditedField('formula')">Save</button>
+              <button type="button" @click="edit.saveEditedField('Formula')">Save</button>
               <button type="button" @click="field_type.toggleEditModal(); edit.closeInputModals()">Cancel</button>
             </div>
           </div>

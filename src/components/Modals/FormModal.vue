@@ -339,7 +339,7 @@ onUnmounted(() => {
             v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
-              <div v-if="field.type === 'label'" :class="field.alignment">
+              <div v-if="field.type === 'Label'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -360,7 +360,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'text'" :class="field.alignment">
+              <div v-if="field.type === 'Text'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -389,7 +389,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'number'" :class="field.alignment">
+              <div v-if="field.type === 'Number'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -719,8 +719,8 @@ onUnmounted(() => {
             columnIndex, sectionIndex, edit.currentTab)}"
             v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
-                
-              <div v-if="field.type === 'label'" :class="field.alignment">
+
+              <div v-if="field.type === 'Label'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -741,7 +741,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'text'" :class="field.alignment">
+              <div v-if="field.type === 'Text'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -770,7 +770,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'number'" :class="field.alignment">
+              <div v-if="field.type === 'Number'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -780,6 +780,7 @@ onUnmounted(() => {
                     name="selectable-field"
                     class="field-description selectable"
                     @click="edit.selectField(field)"
+                    
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}:
@@ -788,6 +789,7 @@ onUnmounted(() => {
                 <div class="field-value-row">
                   <input type="text" class="field-value  right_click_area" v-model="field.value"
                   oncontextmenu="return false"
+                  
                   @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
                   column, section, edit.form.tabs[edit.currentTab], index, 'Number',
                   columnIndex, sectionIndex, edit.currentTab)}" />
@@ -1098,7 +1100,7 @@ onUnmounted(() => {
             v-for="(column, columnIndex) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns" :key="columnIndex">
             <div name="left-fields" class="field-row" v-for="(field, index) in edit.form.tabs[edit.currentTab].sections[sectionIndex].columns[columnIndex].fields" :key="index">
                 
-              <div v-if="field.type === 'label'" :class="field.alignment">
+              <div v-if="field.type === 'Label'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -1119,7 +1121,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'text'" :class="field.alignment">
+              <div v-if="field.type === 'Text'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />
@@ -1148,7 +1150,7 @@ onUnmounted(() => {
                 </div>
               </div>
 
-              <div v-if="field.type === 'number'" :class="field.alignment">
+              <div v-if="field.type === 'Number'" :class="field.alignment">
                 <div class="field-row-inner">
                   <label class="switch">
                     <input type="checkbox" v-model="field.isOn" />

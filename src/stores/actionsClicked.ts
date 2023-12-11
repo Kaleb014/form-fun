@@ -73,20 +73,17 @@ export const useActionStore = defineStore('actionClicked', {
     getMousePosition(e: any) {
       this.mouseX = e.pageX
       this.mouseY = e.pageY
-      console.log('X: ' + this.mouseX + ' ' + 'Y: ' + this.mouseY)
     },
     async toggleModal(_rightClick: boolean) {
       if (this.actionsModalActive && !_rightClick) {
         this.actionsClicked = false
         setTimeout(() => {
           this.actionsModalActive = false
-          console.log('modal off')
-        }, 700)
+        }, 200)
       } else {
         this.actionsModalActive = true
         setTimeout(() => {
           this.actionsClicked = true
-          console.log('modal on')
         }, 100)
       }
     },
@@ -98,7 +95,7 @@ export const useActionStore = defineStore('actionClicked', {
       } as any
       this.setActionList()
     },
-    getTabInfo(_objectType: string, _tab: any, _tabIndex: number){
+    getTabInfo(_objectType: string, _tab: any, _tabIndex: number) {
       this.objectType = _objectType
       this.tabIndex = _tabIndex
       this.actionList = {
@@ -107,7 +104,7 @@ export const useActionStore = defineStore('actionClicked', {
       }  as any
       this.setActionList()
     },
-    getSectionInfo(_objectType: string, _section: any, _sectionIndex: number, _tabIndex: number){
+    getSectionInfo(_objectType: string, _section: any, _sectionIndex: number, _tabIndex: number) {
       this.objectType = _objectType
       this.sectionIndex = _sectionIndex
       this.tabIndex = _tabIndex
@@ -117,7 +114,7 @@ export const useActionStore = defineStore('actionClicked', {
       }  as any
       this.setActionList()
     },
-    getColumnInfo(_objectType: string, _column: any, _columnIndex: number, _sectionIndex: number, _tabIndex: number){
+    getColumnInfo(_objectType: string, _column: any, _columnIndex: number, _sectionIndex: number, _tabIndex: number) {
       this.objectType = _objectType
       this.columnIndex = _columnIndex
       this.sectionIndex = _sectionIndex

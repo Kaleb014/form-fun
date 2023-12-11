@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, onBeforeUnmount } from 'vue'
 import { useActionStore } from '../../stores/actionsClicked'
 
@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
   font-size: small;
 }
 .action_menu_hidden {
-  transition: all 0.5s ease-in-out;
+  transition: all 0.2s ease-in-out;
   opacity: 0;
   visibility: hidden;
   margin-top: 4px;

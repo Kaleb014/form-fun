@@ -400,83 +400,94 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         }
       }
     },
-    saveNewField() {
-      if (this.newLabel) {
-        const _description = document.getElementById('description') as HTMLInputElement
-        const _text = document.getElementById('label') as HTMLInputElement
-        const _obj = {
-          alignment: this.alignment,
-          type: 'label',
-          description: _description.value,
-          value: _text.value,
-          isSelected: false,
-          isOn: true
-        }
-        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
-      } else if (this.newText) {
-        const _description = document.getElementById('description') as HTMLInputElement
-        const _text = document.getElementById('text') as HTMLInputElement
-        const _obj = {
-          alignment: this.alignment,
-          type: 'text',
-          description: _description.value,
-          value: _text.value,
-          width: 200,
-          height: 130,
-          isResizable: false,
-          isSelected: false,
-          isOn: true
-        }
-        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
-      } else if (this.newNumber) {
-        const _description = document.getElementById('description') as HTMLInputElement
-        const _text = document.getElementById('number') as HTMLInputElement
-        const _obj = {
-          alignment: this.alignment,
-          type: 'number',
-          description: _description.value,
-          value: _text.value,
-          isSelected: false,
-          isOn: true
-        }
-        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
-      } else if (this.newItem) {
-        const _description = document.getElementById('description') as HTMLInputElement
-        const _text = document.getElementById('item') as HTMLInputElement
-        const _obj = {
-          alignment: this.alignment,
-          type: 'item',
-          description: _description.value,
-          value: _text.value,
-          isSelected: false,
-          isOn: true
-        }
-        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
-      } else if (this.newFormula) {
-        const _description = document.getElementById('description') as HTMLInputElement
-        const _text = document.getElementById('formula') as HTMLInputElement
-        const _obj = {
-          alignment: this.alignment,
-          type: 'formula',
-          description: _description.value,
-          value: _text.value,
-          isSelected: false,
-          isOn: true
-        }
-        this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+    saveNewField(_type: string) {
+      const _description = document.getElementById('description') as HTMLInputElement
+      const _value = document.getElementById(_type) as HTMLInputElement
+      const _code = document.getElementById('code') as HTMLInputElement
+      let _obj = {}
+
+      switch(_type) {
+        case 'Label':
+          _obj = {
+            alignment: this.alignment,
+            type: 'Label',
+            description: _description.value,
+            value: _value.value,
+            code: _code.value,
+            isSelected: false,
+            isOn: true
+          }
+          this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+          break
+        case 'Text':
+          _obj = {
+            alignment: this.alignment,
+            type: 'Text',
+            description: _description.value,
+            value: _value.value,
+            code: _code.value,
+            width: 200,
+            height: 130,
+            isResizable: false,
+            isSelected: false,
+            isOn: true
+          }
+          this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+          break
+        case 'Number':
+          _obj = {
+            alignment: this.alignment,
+            type: 'Number',
+            description: _description.value,
+            value: _value.value,
+            code: _code.value,
+            isSelected: false,
+            isOn: true
+          }
+          this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+          break
+        case 'Item':
+          _obj = {
+            alignment: this.alignment,
+            type: 'Item',
+            description: _description.value,
+            value: _value.value,
+            code: _code.value,
+            isSelected: false,
+            isOn: true
+          }
+          this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+          break
+        case 'Formula':
+          _obj = {
+            alignment: this.alignment,
+            type: 'Formula',
+            description: _description.value,
+            value: _value.value,
+            code: _code.value,
+            isSelected: false,
+            isOn: true
+          }
+          this.form.tabs[this.currentTab].sections[this.section].columns[this.column].fields.push(_obj)
+          break
+        default:
+          return
       }
     },
     saveEditedField(_type: string) {
       const field_type = useFieldTypeStore()
       const _description = document.getElementById('description') as HTMLInputElement
+      const _value = document.getElementById(_type) as HTMLInputElement
+      const _code = document.getElementById('code') as HTMLInputElement
       const _currentField = this.form.tabs[this.currentTab].sections[this.currentSection].columns[this.currentColumn].fields[this.currentField]
-      
+      console.log(_type + ' ' + _value.value)
       const _obj = {
         description: _description.value,
-        value: '',
-        type: '',
-        width: -1,
-        height: -1,
+        value: _value.value,
+        code: _code.value,
+        type: _type,
+        width: 200,
+        height: 130,
         alignment: this.alignment,
         isSelected: false,
         isResizable: false,
@@ -484,15 +495,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       }
 
       switch(_type) {
-        case 'label':
-          const _label = document.getElementById('label') as HTMLInputElement
-          _obj.type = 'label'
-          _obj.value = _label.value
-          break
-        case 'text':
-          const _text = document.getElementById('text') as HTMLInputElement
-          _obj.type = 'text'
-          _obj.value = _text.value
+        case 'Text':
           if(_currentField.type === _obj.type) {
             _obj.width = _currentField.width
             _obj.height = _currentField.height
@@ -501,20 +504,9 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
             _obj.height = 130
           }
           break
-        case 'number':
-          const _number = document.getElementById('number') as HTMLInputElement
-          _obj.type = 'number'
-          _obj.value = _number.value
-          break
-        case 'item':
-          const _item = document.getElementById('item') as HTMLInputElement
-          _obj.type = 'item'
-          _obj.value = _item.value
-          break
-        case 'formula':
-          const _formula = document.getElementById('formula') as HTMLInputElement
-          _obj.type = 'formula'
-          _obj.value = _formula.value
+        case 'Item':
+          //Items will have unique values that will need to be accounted for
+          //Will add those values here later
           break
         default:
           return
@@ -526,9 +518,13 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       } else {
         _currentField.description = _obj.description
         _currentField.value = _obj.value
+        _currentField.code = _obj.code
         _currentField.type = _obj.type
+        _currentField.width = _obj.width
+        _currentField.height = _obj.height
         _currentField.alignment = _obj.alignment
         _currentField.isSelected = _obj.isSelected
+        _currentField.isResizable = _obj.isResizable
         _currentField.isOn = _obj.isOn
       }
 
