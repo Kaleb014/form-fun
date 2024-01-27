@@ -6,7 +6,6 @@ export const useDeleteStore = defineStore('deleteButtonClicked', {
   },
   actions: {
     async toggleModalWait() {
-      console.log(this.deleteSelection)
       this.deleteSelection = true
       setTimeout(() => {
         this.deleteModalActive = !this.deleteModalActive

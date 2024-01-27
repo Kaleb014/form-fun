@@ -15,13 +15,11 @@ export const useMenuStore = defineStore('menuButtonClicked', {
         this.menuClicked = false
         setTimeout(() => {
           this.menuModalActive = false
-          console.log('modal off')
         }, 700)
       } else {
         this.menuModalActive = true
         setTimeout(() => {
           this.menuClicked = true
-          console.log('modal on')
         }, 100)
       }
     }

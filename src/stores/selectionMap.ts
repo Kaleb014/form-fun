@@ -9,7 +9,6 @@ export const useSelectionStore = defineStore('selectionMapStore', {
       const mapObject = Object.fromEntries(map)
       const jsonString = JSON.stringify(mapObject)
       localStorage.setItem('selected', jsonString)
-      console.log('saving selection map' + map)
     },
     loadMap() {
       const result = localStorage.getItem('selected')

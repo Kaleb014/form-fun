@@ -368,8 +368,12 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}
@@ -397,10 +401,13 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-description selectable"
+                    class="field-description selectable right_click_area"
                     @click="edit.selectField(field)"
-                    
                     :class="{ 'is-selected-outline': field.isSelected }"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                   >
                     {{ field.description }}:
                   </span>
@@ -408,7 +415,6 @@ onUnmounted(() => {
                 <div class="field-value-row">
                   <input type="text" class="field-value  right_click_area" v-model="field.value"
                   oncontextmenu="return false"
-                  
                   @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
                   column, section, edit.form.tabs[edit.currentTab], index, 'Number',
                   columnIndex, sectionIndex, edit.currentTab)}" />
@@ -749,9 +755,13 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
                     :class="{ 'is-selected-outline': field.isSelected }"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                   >
                     {{ field.description }}
                   </span>
@@ -778,18 +788,20 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-description selectable"
+                    class="field-description selectable right_click_area"
                     @click="edit.selectField(field)"
-                    
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}:
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <input type="text" class="field-value  right_click_area" v-model="field.value"
+                  <input type="text" class="field-value right_click_area" v-model="field.value"
                   oncontextmenu="return false"
-                  
                   @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
                   column, section, edit.form.tabs[edit.currentTab], index, 'Number',
                   columnIndex, sectionIndex, edit.currentTab)}" />
@@ -1129,8 +1141,12 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-value selectable"
+                    class="field-value selectable right_click_area"
                     @click="edit.selectField(field)"
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Text',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}
@@ -1158,18 +1174,20 @@ onUnmounted(() => {
                   </label>
                   <span
                     name="selectable-field"
-                    class="field-description selectable"
+                    class="field-description selectable right_click_area"
                     @click="edit.selectField(field)"
-                    
+                    oncontextmenu="return false"
+                    @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
+                    column, section, edit.form.tabs[edit.currentTab], index, 'Number',
+                    columnIndex, sectionIndex, edit.currentTab)}"
                     :class="{ 'is-selected-outline': field.isSelected }"
                   >
                     {{ field.description }}:
                   </span>
                 </div>
                 <div class="field-value-row">
-                  <input type="text" class="field-value  right_click_area" v-model="field.value"
+                  <input type="text" class="field-value right_click_area" v-model="field.value"
                   oncontextmenu="return false"
-                  
                   @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Field', field, 
                   column, section, edit.form.tabs[edit.currentTab], index, 'Number',
                   columnIndex, sectionIndex, edit.currentTab)}" />

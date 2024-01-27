@@ -33,7 +33,6 @@ export const useFormStore = defineStore('formGrid', {
   actions: {
     getFormsArrayLength(_increment = 0) {
       let arrayLength = this.forms.length
-      console.log('array length is ' + arrayLength)
       if (arrayLength === null || arrayLength === undefined) {
         arrayLength = 0 + _increment
       } else {
@@ -92,31 +91,25 @@ export const useFormStore = defineStore('formGrid', {
 
     updateGrid(newVal: Form[]) {
       localStorage.setItem('formsGrid', JSON.stringify(newVal))
-      console.log(newVal)
       this.forms = this.sortForms(false)
       this.loadGrid()
     },
 
     saveForm() {
       localStorage.setItem('formsGrid', JSON.stringify(this.forms))
-      console.log('saving new form to local storage ' + JSON.stringify(this.forms))
     },
 
     addFormToMap(map: Map<number, number>, form: Form, value: number) {
       const selection_map = useSelectionStore()
       this.newMapId(map.size, form)
       map.set(form.mapId, value)
-      console.log('adding ' + form.mapId + ' ' + value + ' to selection map')
-      console.log(map)
       selection_map.saveMap(map)
     },
 
     removeFormFromMap(map: Map<number, number>, key: number, form: Form) {
       const selection_map = useSelectionStore()
-      console.log('removing ' + key + ' ' + map.get(key) + ' from selection map')
       form.mapId = -1
       map.delete(key)
-      console.log(map)
       selection_map.saveMap(map)
     },
 
@@ -125,7 +118,6 @@ export const useFormStore = defineStore('formGrid', {
       form.isSelected = !form.isSelected
       if (form.isSelected) {
         this.addFormToMap(selection_map.selectionMap, form, index)
-        console.log('selecting form at index ' + index)
       } else {
         this.removeFormFromMap(selection_map.selectionMap, form.mapId, form)
       }
@@ -208,7 +200,6 @@ export const useFormStore = defineStore('formGrid', {
     },
 
     copyClicked(map: Map<number, number>) {
-      console.log('copying form')
       const copy_form = useCopyStore()
       const warning = useWarningStore()
 
@@ -219,10 +210,8 @@ export const useFormStore = defineStore('formGrid', {
           warning.toggleWarningModal()
           warning.header = 'You must select a Form to copy it!'
           warning.message = 'Please select a Form and try again.'
-          console.log('select Form')
           return
         case 1:
-          console.log('copying Form')
           useEditFormStore().generateNewForm()
           const copyFrom = this.forms[map.get(0)!]
           const copyTo = useEditFormStore().form
@@ -234,32 +223,12 @@ export const useFormStore = defineStore('formGrid', {
           warning.toggleWarningModal()
           warning.header = 'You can only copy one Form at a time!'
           warning.message = 'Please select only one Form and try again.'
-          console.log('multiple forms selected')
           break
       }
-
-      // if (map.size > 1) {
-      //   const warning = useWarningStore();
-      //   warning.toggleWarningModal();
-      //   warning.header="You can only copy one Form at a time!";
-      //   warning.message="Please select only one Form and try again."
-      // } else if (map.size < 1) {
-      //   const warning = useWarningStore();
-      //   warning.toggleWarningModal();
-      //   warning.header="You must select an Form to copy it!";
-      //   warning.message="Please select an Form and try again."
-      //   console.log('select Form');
-      // } else {
-      //   console.log('copying Form');
-      //   const selection = useSelectionStore();
-      //   copy_form.content = this.forms[selection.selectionMap.get(0)].content;
-      //   copy_form.toggleModal();
-      // }
     },
 
     copyForm(map: Map<number, number>) {
       const copy_form = useCopyStore()
-      //const i = this.forms[map.get(0)!];
       this.addForm(
         copy_form.itemProperties[0],
         copy_form.itemProperties[1],
@@ -270,7 +239,6 @@ export const useFormStore = defineStore('formGrid', {
     },
 
     editForm(_form: Form, _index: number) {
-      console.log('form clicked')
       const edit = useEditFormStore()
       edit.currentForm = _index
       edit.form = _.cloneDeep(_form)
@@ -352,26 +320,6 @@ export const useFormStore = defineStore('formGrid', {
         default:
           break
       }
-
-      // if(sort_form.sortStore[0].column === 'FormName') {
-      //   switch(sortValue) {
-      //     case 1:
-      //       return sort_form.formSortFormNameAscending;
-      //     case 2:
-      //       return sort_form.formSortFormNameDescending;
-      //     default:
-      //       break
-      //   }
-      // } else if (sort_form.sortStore[0].column === 'FormDate') {
-      //   switch(sortValue) {
-      //     case 1:
-      //       return sort_form.formArraySortCreatedAscending;
-      //     case 2:
-      //       return sort_form.formArraySortCreatedDescending;
-      //     default:
-      //       break
-      //   }
-      // }
 
       return sort_form.formArraySortCreatedAscending
     }

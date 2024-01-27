@@ -162,11 +162,11 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       this.form.tabs[_newIndex].isSelected = true
     },
     closeInputModals() {
-      this.newNumber = false
+      this.newLabel = false
       this.newText = false
+      this.newNumber = false
       this.newItem = false
       this.newFormula = false
-      this.newLabel = false
     },
     setFieldProperties() {
       //Section/Column
@@ -473,6 +473,8 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         default:
           return
       }
+      
+      this.closeInputModals()
     },
     saveEditedField(_type: string) {
       const field_type = useFieldTypeStore()
@@ -480,7 +482,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
       const _value = document.getElementById(_type) as HTMLInputElement
       const _code = document.getElementById('code') as HTMLInputElement
       const _currentField = this.form.tabs[this.currentTab].sections[this.currentSection].columns[this.currentColumn].fields[this.currentField]
-      console.log(_type + ' ' + _value.value)
+
       const _obj = {
         description: _description.value,
         value: _value.value,
@@ -509,7 +511,7 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
           //Will add those values here later
           break
         default:
-          return
+          break
       }
 
       if(this.section != this.currentSection || this.column != this.currentColumn) {
@@ -544,12 +546,9 @@ export const useEditFormStore = defineStore('editFormButtonClicked', {
         const _textArea = document.getElementsByName('resizeTextArea') as NodeListOf<HTMLTextAreaElement>
         field.width = _textArea[0].style.width
         field.height = _textArea[0].style.height
-        console.log(_textArea[0].style.width + ' ' + _textArea[0].style.height)
-        console.log(_field.width + ' ' + _field.height)
         this.toggleResize(_field)
       } else {
         this.toggleResize(_field)
-        console.log(_field.isResizable)
       }
     },
     toggleResize(_field: any) {

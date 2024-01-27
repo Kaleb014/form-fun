@@ -15,13 +15,11 @@ export const useTabToolsStore = defineStore('tabToolsButtonClicked', {
         this.tabsClicked = false
         setTimeout(() => {
           this.tabToolsModalActive = false
-          console.log('modal off')
         }, 700)
       } else {
         this.tabToolsModalActive = true
         setTimeout(() => {
           this.tabsClicked = true
-          console.log('modal on')
         }, 100)
       }
     }

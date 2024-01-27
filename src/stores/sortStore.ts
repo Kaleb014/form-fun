@@ -58,10 +58,8 @@ export const useSortStore = defineStore('sortGridStore', {
     loadSortGrid() {
       const result = localStorage.getItem('sortGrid')
       if (result === null || result === undefined) {
-        console.log('sort grid is empty')
         return
       }
-      console.log('loading sort grid')
       this.sortStore = JSON.parse(result)
     }
   }
