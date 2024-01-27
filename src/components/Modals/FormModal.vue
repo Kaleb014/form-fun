@@ -324,7 +324,10 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="scrollable">
+      <div class="scrollable right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+        null, null, edit.form.tabs[edit.currentTab], -1, '', -1, -1, edit.currentTab)}">
         <div name="fields" class="section right_click_area"
           oncontextmenu="return false"
           @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
@@ -711,7 +714,10 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="scrollable">
+      <div class="scrollable right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+        null, null, edit.form.tabs[edit.currentTab], -1, '', -1, -1, edit.currentTab)}">
         <div name="fields" class="section right_click_area"
           oncontextmenu="return false"
           @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
@@ -1097,7 +1103,10 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div class="scrollable">
+      <div class="scrollable right_click_area"
+        oncontextmenu="return false"
+        @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Tab', null, 
+        null, null, edit.form.tabs[edit.currentTab], -1, '', -1, -1, edit.currentTab)}">
         <div name="fields" class="section right_click_area"
           oncontextmenu="return false"
           @click.right.stop="(e) => {actions_clicked.rightClickManager(e, 'Section', null, 
