@@ -202,7 +202,7 @@ table tr th:nth-child(3) {
   width: 200px;
 }
 input {
-  background-color: #4a4c55;
+  background-color: var(--input-background);
   color: #edf0f1;
   border-style: none;
 }

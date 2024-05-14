@@ -424,7 +424,7 @@ button {
 }
 
 .input_form input {
-  background-color: var(--border-color);
+  background-color: var(--input-background);
   color: var(--white);
   border: 1px solid #5f616d;
 }
@@ -500,7 +500,7 @@ p {
 }
 
 input {
-  background-color: var(--border-color);
+  background-color: var(--input-background);
   color: var(--white);
   border: 1px solid #5f616d;
 }
@@ -638,7 +638,7 @@ input:focus {
 }
 
 textarea {
-  background-color: var(--border-color);
+  background-color: var(--input-background);
   color: var(--white);
   border: 1px solid #5f616d;
   /*border-style: none;*/
