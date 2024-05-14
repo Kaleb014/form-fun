@@ -6,7 +6,7 @@ import SearchBar from './SearchBar.vue'
 </script>
 
 <template>
-  <div class="row_two tab-row">
+  <div class="row_two">
     <div class="input_form">
       <SearchBar />
     </div>
